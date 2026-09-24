@@ -1,0 +1,6 @@
+{
+  "name": "Space Vector Modulation Interactive Lab",
+  "description": "An interactive teaching demonstration for Space Vector Pulse Width Modulation (SVPWM), featuring complex αβ-plane vector dynamics, sector dwell time calculations, 7-segment PWM switching, inverter conduction visualizer, saddle-wave zero-sequence equivalence, and harmonic THD spectrum analysis.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
