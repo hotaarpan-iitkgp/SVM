@@ -29,26 +29,26 @@ export const InverterCircuitView: React.FC<InverterCircuitViewProps> = ({ state 
   const vcn = Math.round(vcN - vnN);
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-4 flex flex-col h-full">
+    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-4 flex flex-col h-full transition-colors">
       {/* Title & Badge */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+      <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <div className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
             <Zap className="h-4 w-4" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-slate-800 tracking-tight">
+            <h2 className="text-sm font-bold text-slate-800 dark:text-white tracking-tight">
               3-Phase Inverter Live Conduction
             </h2>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Active semiconductors for Vector V{state.activeVectorId} [{sa} {sb} {sc}]
             </p>
           </div>
         </div>
 
         <div className="text-right">
-          <span className="text-xs text-slate-400 block">DC Bus</span>
-          <span className="text-xs font-bold font-mono text-slate-800">{vdc} V</span>
+          <span className="text-xs text-slate-400 dark:text-slate-500 block">DC Bus</span>
+          <span className="text-xs font-bold font-mono text-slate-800 dark:text-slate-200">{vdc} V</span>
         </div>
       </div>
 
@@ -189,46 +189,46 @@ export const InverterCircuitView: React.FC<InverterCircuitViewProps> = ({ state 
       </div>
 
       {/* Live Voltage Gauge Readouts */}
-      <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100 text-xs">
+      <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
         {/* Pole Voltages */}
-        <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
-          <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">
+        <div className="bg-slate-50 dark:bg-slate-800/60 p-2 rounded-lg border border-slate-100 dark:border-slate-700/60">
+          <span className="text-slate-400 dark:text-slate-500 block text-[10px] uppercase font-bold tracking-wider">
             Pole (Leg to DC-)
           </span>
-          <div className="font-mono space-y-0.5 mt-1 font-semibold text-slate-800">
-            <div className="text-blue-600">VaN = {vaN} V</div>
-            <div className="text-emerald-600">VbN = {vbN} V</div>
-            <div className="text-amber-600">VcN = {vcN} V</div>
+          <div className="font-mono space-y-0.5 mt-1 font-semibold text-slate-800 dark:text-slate-200">
+            <div className="text-blue-600 dark:text-blue-400">VaN = {vaN} V</div>
+            <div className="text-emerald-600 dark:text-emerald-400">VbN = {vbN} V</div>
+            <div className="text-amber-600 dark:text-amber-400">VcN = {vcN} V</div>
           </div>
         </div>
 
         {/* Line-to-Line Voltages */}
-        <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
-          <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">
+        <div className="bg-slate-50 dark:bg-slate-800/60 p-2 rounded-lg border border-slate-100 dark:border-slate-700/60">
+          <span className="text-slate-400 dark:text-slate-500 block text-[10px] uppercase font-bold tracking-wider">
             Line-to-Line
           </span>
-          <div className="font-mono space-y-0.5 mt-1 font-semibold text-slate-800">
-            <div className={vab > 0 ? 'text-emerald-600' : vab < 0 ? 'text-rose-600' : 'text-slate-500'}>
+          <div className="font-mono space-y-0.5 mt-1 font-semibold text-slate-800 dark:text-slate-200">
+            <div className={vab > 0 ? 'text-emerald-600 dark:text-emerald-400' : vab < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-500 dark:text-slate-400'}>
               Vab = {vab} V
             </div>
-            <div className={vbc > 0 ? 'text-emerald-600' : vbc < 0 ? 'text-rose-600' : 'text-slate-500'}>
+            <div className={vbc > 0 ? 'text-emerald-600 dark:text-emerald-400' : vbc < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-500 dark:text-slate-400'}>
               Vbc = {vbc} V
             </div>
-            <div className={vca > 0 ? 'text-emerald-600' : vca < 0 ? 'text-rose-600' : 'text-slate-500'}>
+            <div className={vca > 0 ? 'text-emerald-600 dark:text-emerald-400' : vca < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-500 dark:text-slate-400'}>
               Vca = {vca} V
             </div>
           </div>
         </div>
 
         {/* Phase-to-Neutral Voltages */}
-        <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
-          <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">
+        <div className="bg-slate-50 dark:bg-slate-800/60 p-2 rounded-lg border border-slate-100 dark:border-slate-700/60">
+          <span className="text-slate-400 dark:text-slate-500 block text-[10px] uppercase font-bold tracking-wider">
             Phase-to-Neutral
           </span>
-          <div className="font-mono space-y-0.5 mt-1 font-semibold text-slate-800">
-            <div className="text-blue-600">Van = {van} V</div>
-            <div className="text-emerald-600">Vbn = {vbn} V</div>
-            <div className="text-amber-600">Vcn = {vcn} V</div>
+          <div className="font-mono space-y-0.5 mt-1 font-semibold text-slate-800 dark:text-slate-200">
+            <div className="text-blue-600 dark:text-blue-400">Van = {van} V</div>
+            <div className="text-emerald-600 dark:text-emerald-400">Vbn = {vbn} V</div>
+            <div className="text-amber-600 dark:text-amber-400">Vcn = {vcn} V</div>
           </div>
         </div>
       </div>

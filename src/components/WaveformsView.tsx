@@ -54,15 +54,15 @@ export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateSta
   const sectorAngles = [60, 120, 180, 240, 300];
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-4 flex flex-col h-full">
+    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-4 flex flex-col h-full transition-colors">
       {/* Title & View Switcher */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
         <div>
-          <h2 className="text-sm font-bold text-slate-800 tracking-tight flex items-center gap-1.5">
-            <Activity className="h-4 w-4 text-indigo-600" />
+          <h2 className="text-sm font-bold text-slate-800 dark:text-white tracking-tight flex items-center gap-1.5">
+            <Activity className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
             Full-Cycle Waveforms (0° to 360°)
           </h2>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             {activeTab === 'saddle' && 'Saddle waveform: Fundamental + Zero-Sequence Common-Mode Offset'}
             {activeTab === 'pwm' && 'Instantaneous inverter PWM pulsed voltages & low-pass filtered fundamental'}
             {activeTab === 'duties' && 'Leg duty cycles Da(θ), Db(θ), Dc(θ) across the 6 Hexagon Sectors'}
@@ -70,13 +70,13 @@ export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateSta
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs">
+        <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs">
           <button
             onClick={() => setActiveTab('saddle')}
             className={`px-2.5 py-1 rounded-md font-medium transition-colors ${
               activeTab === 'saddle'
-                ? 'bg-white text-slate-900 shadow-xs font-semibold'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-semibold'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             Saddle Reference
@@ -85,8 +85,8 @@ export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateSta
             onClick={() => setActiveTab('pwm')}
             className={`px-2.5 py-1 rounded-md font-medium transition-colors ${
               activeTab === 'pwm'
-                ? 'bg-white text-slate-900 shadow-xs font-semibold'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-semibold'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             PWM & Filtered AC
@@ -95,8 +95,8 @@ export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateSta
             onClick={() => setActiveTab('duties')}
             className={`px-2.5 py-1 rounded-md font-medium transition-colors ${
               activeTab === 'duties'
-                ? 'bg-white text-slate-900 shadow-xs font-semibold'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-semibold'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             Duty Cycles

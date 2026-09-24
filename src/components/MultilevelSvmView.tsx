@@ -156,24 +156,24 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
   const majorSector = Math.min(6, Math.floor(normDeg / 60) + 1);
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+    <div className="space-y-6 max-w-7xl mx-auto pb-12 transition-colors">
       {/* Overview Banner */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-5">
+      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-5 transition-colors">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200">
+            <div className="p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
               <Network className="h-6 w-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-lg font-bold text-slate-900 tracking-tight">
+                <h1 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                   Multilevel Space Vector Modulation ({level}-Level Inverter)
                 </h1>
-                <span className="px-2 py-0.5 rounded text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="px-2 py-0.5 rounded text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                   {stats.numStates} Switching States • {stats.numVectors} Voltage Vectors
                 </span>
               </div>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {level === 2 && 'Standard 2-Level VSI • 6 Active Vectors • 1 Zero Vector'}
                 {level === 3 && '3-Level NPC / T-Type • 24 Sub-Triangles • 5-Level Line Voltages'}
                 {level === 4 && '4-Level Flying Capacitor (FC) • 54 Sub-Triangles • 7-Level Line Voltages'}
@@ -205,24 +205,24 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
             </button>
 
             {/* Step Controls */}
-            <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-md border border-slate-200 text-xs">
+            <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-md border border-slate-200 dark:border-slate-700 text-xs">
               <button
                 onClick={() => {
                   const newDeg = (state.thetaDeg - 5 + 360) % 360;
                   onUpdateState({ thetaDeg: newDeg, isPlaying: false });
                 }}
-                className="p-1 rounded text-slate-600 hover:text-slate-900 hover:bg-white"
+                className="p-1 rounded text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-700"
                 title="Step backward 5°"
               >
                 <ChevronLeft className="h-3.5 w-3.5" />
               </button>
-              <span className="font-mono px-1 font-bold text-slate-800">{Math.round(state.thetaDeg)}°</span>
+              <span className="font-mono px-1 font-bold text-slate-800 dark:text-slate-200">{Math.round(state.thetaDeg)}°</span>
               <button
                 onClick={() => {
                   const newDeg = (state.thetaDeg + 5) % 360;
                   onUpdateState({ thetaDeg: newDeg, isPlaying: false });
                 }}
-                className="p-1 rounded text-slate-600 hover:text-slate-900 hover:bg-white"
+                className="p-1 rounded text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-700"
                 title="Step forward 5°"
               >
                 <ChevronRight className="h-3.5 w-3.5" />
@@ -232,21 +232,21 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
         </div>
 
         {/* Level Selection Bar to choose any number of levels */}
-        <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-bold text-slate-700 flex items-center gap-1">
-              <Layers className="h-4 w-4 text-emerald-600" />
+            <span className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1">
+              <Layers className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
               Inverter Level (N):
             </span>
-            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200">
+            <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
               {[2, 3, 4, 5].map((lvl) => (
                 <button
                   key={`lvl-btn-${lvl}`}
                   onClick={() => setLevel(lvl)}
                   className={`px-3 py-1 rounded text-xs font-semibold transition-all ${
                     level === lvl
-                      ? 'bg-white text-emerald-700 shadow-xs font-bold'
-                      : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-white dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 shadow-xs font-bold'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   {lvl}-Level {lvl === 2 ? '(2-L)' : lvl === 3 ? '(NPC)' : lvl === 4 ? '(FC)' : '(CHB)'}
@@ -263,16 +263,16 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
                 step="1"
                 value={level}
                 onChange={(e) => setLevel(Number(e.target.value))}
-                className="w-20 accent-emerald-600 h-1.5 bg-slate-200 rounded cursor-pointer"
+                className="w-20 accent-emerald-600 h-1.5 bg-slate-200 dark:bg-slate-700 rounded cursor-pointer"
               />
-              <span className="font-mono font-bold text-emerald-700">{level} Levels</span>
+              <span className="font-mono font-bold text-emerald-700 dark:text-emerald-400">{level} Levels</span>
             </div>
           </div>
 
           {/* Quick modulation and angle sliders */}
           <div className="flex items-center gap-4 flex-wrap">
             <div className="flex items-center gap-1.5">
-              <span className="font-semibold text-slate-700">Angle θ:</span>
+              <span className="font-semibold text-slate-700 dark:text-slate-300">Angle θ:</span>
               <input
                 type="range"
                 min="0"
@@ -280,13 +280,13 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
                 step="1"
                 value={state.thetaDeg}
                 onChange={(e) => onUpdateState({ thetaDeg: Number(e.target.value) })}
-                className="w-24 accent-emerald-600 h-1.5 bg-slate-200 rounded cursor-pointer"
+                className="w-24 accent-emerald-600 h-1.5 bg-slate-200 dark:bg-slate-700 rounded cursor-pointer"
               />
-              <span className="font-mono font-bold text-slate-900 w-9 text-right">{Math.round(state.thetaDeg)}°</span>
+              <span className="font-mono font-bold text-slate-900 dark:text-slate-100 w-9 text-right">{Math.round(state.thetaDeg)}°</span>
             </div>
 
             <div className="flex items-center gap-1.5">
-              <span className="font-semibold text-slate-700">Index m:</span>
+              <span className="font-semibold text-slate-700 dark:text-slate-300">Index m:</span>
               <input
                 type="range"
                 min="0.1"
@@ -294,12 +294,12 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
                 step="0.02"
                 value={state.m}
                 onChange={(e) => onUpdateState({ m: Number(e.target.value) })}
-                className="w-20 accent-emerald-600 h-1.5 bg-slate-200 rounded cursor-pointer"
+                className="w-20 accent-emerald-600 h-1.5 bg-slate-200 dark:bg-slate-700 rounded cursor-pointer"
               />
-              <span className="font-mono font-bold text-emerald-700 w-9 text-right">{state.m.toFixed(2)}</span>
+              <span className="font-mono font-bold text-emerald-700 dark:text-emerald-400 w-9 text-right">{state.m.toFixed(2)}</span>
             </div>
 
-            <label className="flex items-center gap-1 cursor-pointer text-slate-600">
+            <label className="flex items-center gap-1 cursor-pointer text-slate-600 dark:text-slate-300">
               <input
                 type="checkbox"
                 checked={showSubTriangles}
@@ -315,19 +315,19 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
       {/* Main Grid: Interactive Multi-Level Canvas & Synthesis Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Interactive Multi-Level Hexagon Canvas */}
-        <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200 shadow-xs p-5 flex flex-col items-center">
-          <div className="w-full flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="lg:col-span-7 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-5 flex flex-col items-center transition-colors">
+          <div className="w-full flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
-              <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <Compass className="h-4 w-4 text-emerald-600" />
+              <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Compass className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                 {level}-Level Space Vector Hexagonal Lattice ({stats.numTriangles} Sub-Triangles)
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {level - 1} Concentric Hexagons • Real-Time Rotating Reference Vector V_ref
               </p>
             </div>
 
-            <span className="text-xs px-2.5 py-1 rounded bg-slate-100 font-mono text-slate-700 border border-slate-200 font-bold">
+            <span className="text-xs px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 font-mono text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold">
               Sector {majorSector} • θ={Math.round(thetaDeg)}°
             </span>
           </div>
@@ -527,39 +527,39 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
         {/* Right: Synthesis Details & Multilevel Metrics */}
         <div className="lg:col-span-5 space-y-4">
           {/* Active Sub-Triangle Synthesis Card */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-5 space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-              <h3 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-5 space-y-4 transition-colors">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+              <h3 className="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                 Nearest Three Vectors (NTV) Synthesis
               </h3>
-              <span className="px-2 py-0.5 rounded text-[11px] font-mono bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">
+              <span className="px-2 py-0.5 rounded text-[11px] font-mono bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 font-bold">
                 {level}-Level NTV
               </span>
             </div>
 
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               In multilevel SVPWM, the reference vector V_ref is synthesized exclusively by the <strong>3 vertices of the sub-triangle</strong> containing it, minimizing switching ripple and dv/dt:
             </p>
 
             {/* 3 Synthesizing Vectors Cards */}
             <div className="space-y-2">
               {nearest3.map((vec, idx) => (
-                <div key={`near-${vec.id}`} className="p-2.5 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-between text-xs">
+                <div key={`near-${vec.id}`} className="p-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[11px]">
+                    <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 flex items-center justify-center font-bold text-[11px]">
                       V{idx + 1}
                     </span>
                     <div>
-                      <span className="font-bold text-slate-900">{vec.id}</span>
-                      <span className="text-slate-500 text-[11px] ml-1.5">Mag: {vec.mag.toFixed(3)}</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{vec.id}</span>
+                      <span className="text-slate-500 dark:text-slate-400 text-[11px] ml-1.5">Mag: {vec.mag.toFixed(3)}</span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className="font-mono text-slate-700 text-[11px] bg-white px-2 py-0.5 rounded border border-slate-200">
+                    <span className="font-mono text-slate-700 dark:text-slate-200 text-[11px] bg-white dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
                       [{vec.states.slice(0, 3).join(', ')}{vec.states.length > 3 ? '...' : ''}]
                     </span>
-                    <span className="block text-[10px] text-slate-400 mt-0.5">
+                    <span className="block text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">
                       {vec.states.length} redundant state{vec.states.length > 1 ? 's' : ''}
                     </span>
                   </div>
@@ -568,38 +568,38 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
             </div>
 
             {/* Inverter Topology Metrics Table */}
-            <div className="pt-2 border-t border-slate-100">
-              <span className="block text-[11px] font-bold text-slate-700 mb-2">
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+              <span className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-2">
                 {level}-Level Inverter Mathematical Scaling:
               </span>
               <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                <div className="p-2 bg-slate-50 rounded border border-slate-200">
-                  <span className="block text-[10px] text-slate-400 font-sans">Switching States (N³)</span>
-                  <span className="text-slate-900 font-bold">{stats.numStates} States</span>
+                <div className="p-2 bg-slate-50 dark:bg-slate-800/60 rounded border border-slate-200 dark:border-slate-700">
+                  <span className="block text-[10px] text-slate-400 dark:text-slate-500 font-sans">Switching States (N³)</span>
+                  <span className="text-slate-900 dark:text-slate-100 font-bold">{stats.numStates} States</span>
                 </div>
-                <div className="p-2 bg-slate-50 rounded border border-slate-200">
-                  <span className="block text-[10px] text-slate-400 font-sans">Unique Vectors</span>
-                  <span className="text-slate-900 font-bold">{stats.numVectors} Vectors</span>
+                <div className="p-2 bg-slate-50 dark:bg-slate-800/60 rounded border border-slate-200 dark:border-slate-700">
+                  <span className="block text-[10px] text-slate-400 dark:text-slate-500 font-sans">Unique Vectors</span>
+                  <span className="text-slate-900 dark:text-slate-100 font-bold">{stats.numVectors} Vectors</span>
                 </div>
-                <div className="p-2 bg-slate-50 rounded border border-slate-200">
-                  <span className="block text-[10px] text-slate-400 font-sans">Sub-Triangles [6(N-1)²]</span>
-                  <span className="text-slate-900 font-bold">{stats.numTriangles} Triangles</span>
+                <div className="p-2 bg-slate-50 dark:bg-slate-800/60 rounded border border-slate-200 dark:border-slate-700">
+                  <span className="block text-[10px] text-slate-400 dark:text-slate-500 font-sans">Sub-Triangles [6(N-1)²]</span>
+                  <span className="text-slate-900 dark:text-slate-100 font-bold">{stats.numTriangles} Triangles</span>
                 </div>
-                <div className="p-2 bg-slate-50 rounded border border-slate-200">
-                  <span className="block text-[10px] text-slate-400 font-sans">Line Voltage Steps</span>
-                  <span className="text-emerald-700 font-bold">{stats.lineLevels} Levels</span>
+                <div className="p-2 bg-slate-50 dark:bg-slate-800/60 rounded border border-slate-200 dark:border-slate-700">
+                  <span className="block text-[10px] text-slate-400 dark:text-slate-500 font-sans">Line Voltage Steps</span>
+                  <span className="text-emerald-700 dark:text-emerald-400 font-bold">{stats.lineLevels} Levels</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Advantages Card */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-4 text-xs space-y-2">
-            <h4 className="font-bold text-slate-800 flex items-center gap-1.5">
-              <ShieldCheck className="h-4 w-4 text-emerald-600" />
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-4 text-xs space-y-2 transition-colors">
+            <h4 className="font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
+              <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
               Why Multilevel Modulation?
             </h4>
-            <ul className="space-y-1.5 text-slate-600">
+            <ul className="space-y-1.5 text-slate-600 dark:text-slate-300">
               <li className="flex items-start gap-1.5">
                 <span className="text-emerald-500 font-bold">✓</span>
                 <span><strong>Reduced dv/dt Stress:</strong> Each switch transition handles only Vdc / {level - 1} V rather than full Vdc.</span>

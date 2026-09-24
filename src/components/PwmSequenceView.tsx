@@ -106,34 +106,34 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
   const cursorX = padLeft + tau * plotWidth;
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-4 flex flex-col justify-between h-full min-h-[560px]">
+    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-4 flex flex-col justify-between h-full min-h-[560px] transition-colors">
       {/* Header bar */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-100 shrink-0">
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-800 shrink-0">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-sm font-bold text-slate-800 tracking-tight flex items-center gap-1.5">
-              <Clock className="h-4 w-4 text-sky-600" />
+            <h2 className="text-sm font-bold text-slate-800 dark:text-white tracking-tight flex items-center gap-1.5">
+              <Clock className="h-4 w-4 text-sky-600 dark:text-sky-400" />
               Symmetrical 7-Segment PWM Sub-Cycle Timing
             </h2>
-            <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200">
+            <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
               Ts = {(state.ts * 1e6).toFixed(0)} µs ({state.fsw / 1000} kHz)
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Sector {state.sector} • Full Y-axis calibrated comparison & gate waveforms
           </p>
         </div>
 
         {/* Carrier style switch & Vector status */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs">
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs">
             <button
               onClick={() => setCarrierMode('v-shape')}
               title="Standard V-shape carrier where duty compare line intersects exactly at switching transitions"
               className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
                 carrierMode === 'v-shape'
-                  ? 'bg-white text-slate-900 shadow-xs font-semibold'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-semibold'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               V-Carrier (1→0→1)
@@ -143,8 +143,8 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
               title="Peak-shape triangular carrier (0→1→0)"
               className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
                 carrierMode === 'peak-shape'
-                  ? 'bg-white text-slate-900 shadow-xs font-semibold'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-semibold'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               Peak-Carrier (0→1→0)
@@ -152,7 +152,7 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
           </div>
 
           {/* Current Active Vector Pill */}
-          <div className="flex items-center gap-1.5 bg-slate-900 text-white px-2.5 py-1 rounded-lg text-xs font-mono">
+          <div className="flex items-center gap-1.5 bg-slate-900 dark:bg-slate-800 text-white px-2.5 py-1 rounded-lg text-xs font-mono border border-slate-800 dark:border-slate-700">
             <span className="text-slate-400">Vector:</span>
             <span className="font-bold text-amber-400">{currentSeg.name}</span>
             <span className="text-slate-300">[{currentSeg.bits.join(' ')}]</span>
@@ -441,16 +441,16 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
       </div>
 
       {/* Sub-cycle scrub slider and leg status pills (anchored firmly at bottom) */}
-      <div className="pt-2.5 border-t border-slate-100 flex flex-col gap-2 shrink-0 bg-white">
-        <div className="flex items-center justify-between text-xs text-slate-600">
+      <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2 shrink-0 bg-white dark:bg-slate-900 transition-colors">
+        <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
           <span className="font-semibold flex items-center gap-1.5">
             <span>Sub-Cycle Scrubber (within Ts):</span>
-            <span className="text-slate-900 font-mono bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+            <span className="text-slate-900 dark:text-slate-100 font-mono bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700">
               {(state.subCycleProgress * 100).toFixed(1)}% • {(state.subCycleProgress * state.ts * 1e6).toFixed(1)} µs
             </span>
           </span>
-          <span className="text-slate-500">
-            Active Segment: <strong className="text-slate-900">{currentSeg.name} [{currentSeg.bits.join(' ')}]</strong> ({currentSeg.label})
+          <span className="text-slate-500 dark:text-slate-400">
+            Active Segment: <strong className="text-slate-900 dark:text-white">{currentSeg.name} [{currentSeg.bits.join(' ')}]</strong> ({currentSeg.label})
           </span>
         </div>
 
@@ -461,29 +461,29 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
           step="0.002"
           value={state.subCycleProgress}
           onChange={(e) => onUpdateState({ subCycleProgress: Number(e.target.value) })}
-          className="w-full accent-amber-500 h-1.5 bg-slate-200 rounded-lg cursor-pointer"
+          className="w-full accent-amber-500 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg cursor-pointer"
         />
 
         {/* 3 Legs Quick Status Display */}
         <div className="grid grid-cols-3 gap-2 text-xs text-center mt-0.5">
           <div className={`p-2 rounded-lg border font-mono transition-colors ${
             currentSeg.bits[0] === 1 
-              ? 'bg-blue-50 text-blue-800 border-blue-200 font-bold shadow-2xs' 
-              : 'bg-slate-50 text-slate-400 border-slate-200'
+              ? 'bg-blue-50 dark:bg-blue-950/50 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800 font-bold shadow-2xs' 
+              : 'bg-slate-50 dark:bg-slate-800/60 text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-700/60'
           }`}>
             Leg A: {currentSeg.bits[0] === 1 ? 'HIGH (+Vdc)' : 'LOW (0V)'}
           </div>
           <div className={`p-2 rounded-lg border font-mono transition-colors ${
             currentSeg.bits[1] === 1 
-              ? 'bg-emerald-50 text-emerald-800 border-emerald-200 font-bold shadow-2xs' 
-              : 'bg-slate-50 text-slate-400 border-slate-200'
+              ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800 font-bold shadow-2xs' 
+              : 'bg-slate-50 dark:bg-slate-800/60 text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-700/60'
           }`}>
             Leg B: {currentSeg.bits[1] === 1 ? 'HIGH (+Vdc)' : 'LOW (0V)'}
           </div>
           <div className={`p-2 rounded-lg border font-mono transition-colors ${
             currentSeg.bits[2] === 1 
-              ? 'bg-amber-50 text-amber-800 border-amber-200 font-bold shadow-2xs' 
-              : 'bg-slate-50 text-slate-400 border-slate-200'
+              ? 'bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800 font-bold shadow-2xs' 
+              : 'bg-slate-50 dark:bg-slate-800/60 text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-700/60'
           }`}>
             Leg C: {currentSeg.bits[2] === 1 ? 'HIGH (+Vdc)' : 'LOW (0V)'}
           </div>

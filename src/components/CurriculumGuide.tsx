@@ -55,33 +55,33 @@ export const CurriculumGuide: React.FC<CurriculumGuideProps> = ({
   const isCorrect = step.quiz && selectedAnswers[currentStepIndex] === step.quiz.correctIndex;
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-5 max-w-4xl mx-auto space-y-6">
+    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-5 max-w-4xl mx-auto space-y-6 transition-colors">
       {/* Top Header & Step Progress */}
-      <div className="border-b border-slate-100 pb-4">
+      <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600">
+            <div className="h-8 w-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
               <BookOpen className="h-4 w-4" />
             </div>
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-indigo-600">
+              <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
                 SVPWM Masterclass & Laboratory
               </span>
-              <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                 {step.title}
               </h2>
             </div>
           </div>
 
-          <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">
+          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-full border border-slate-200/60 dark:border-slate-700/60">
             Step {currentStepIndex + 1} of {CURRICULUM_STEPS.length}
           </span>
         </div>
 
         {/* Progress Bar */}
-        <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-3">
+        <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden mt-3">
           <div
-            className="bg-indigo-600 h-full transition-all duration-300 rounded-full"
+            className="bg-indigo-600 dark:bg-indigo-500 h-full transition-all duration-300 rounded-full"
             style={{ width: `${((currentStepIndex + 1) / CURRICULUM_STEPS.length) * 100}%` }}
           />
         </div>
@@ -89,27 +89,27 @@ export const CurriculumGuide: React.FC<CurriculumGuideProps> = ({
 
       {/* Main Content Area */}
       <div className="space-y-4">
-        <h3 className="text-sm font-semibold text-slate-700">
+        <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300">
           {step.subtitle}
         </h3>
 
         {/* Formatted Description */}
-        <div className="prose prose-slate text-xs sm:text-sm text-slate-600 leading-relaxed whitespace-pre-line bg-slate-50/70 p-4 rounded-xl border border-slate-100">
+        <div className="prose prose-slate dark:prose-invert text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line bg-slate-50/70 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
           {step.description}
         </div>
 
         {/* Key Takeaways */}
         <div className="space-y-2 pt-1">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
             Key Concepts
           </span>
           <div className="grid grid-cols-1 gap-2">
             {step.keyPoints.map((point, i) => (
               <div
                 key={`kp-${i}`}
-                className="flex items-start gap-2.5 text-xs text-slate-700 bg-white p-2.5 rounded-lg border border-slate-200 shadow-2xs"
+                className="flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800/80 p-2.5 rounded-lg border border-slate-200 dark:border-slate-700 shadow-2xs"
               >
-                <div className="h-4 w-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                <div className="h-4 w-4 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
                   <span className="text-[10px] font-bold">✓</span>
                 </div>
                 <span>{point}</span>
@@ -120,8 +120,8 @@ export const CurriculumGuide: React.FC<CurriculumGuideProps> = ({
 
         {/* Action Button: Apply Suggested Preset */}
         {step.suggestedPreset && (
-          <div className="flex items-center justify-between p-3 rounded-lg bg-indigo-50/80 border border-indigo-100 mt-2">
-            <div className="text-xs text-indigo-900">
+          <div className="flex items-center justify-between p-3 rounded-lg bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60 mt-2">
+            <div className="text-xs text-indigo-900 dark:text-indigo-200">
               <strong>Interactive Demo:</strong> Load the recommended vector angle and modulation index for this step.
             </div>
             <button
@@ -136,15 +136,15 @@ export const CurriculumGuide: React.FC<CurriculumGuideProps> = ({
 
         {/* Interactive Concept Quiz */}
         {step.quiz && (
-          <div className="mt-6 pt-5 border-t border-slate-100 space-y-3">
+          <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 space-y-3">
             <div className="flex items-center gap-2">
-              <HelpCircle className="h-4 w-4 text-amber-600" />
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700">
+              <HelpCircle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                 Check Your Understanding
               </h4>
             </div>
 
-            <p className="text-sm font-medium text-slate-800">
+            <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
               {step.quiz.question}
             </p>
 
@@ -152,15 +152,15 @@ export const CurriculumGuide: React.FC<CurriculumGuideProps> = ({
               {step.quiz.options.map((option, optIdx) => {
                 const isSelected = selectedAnswers[currentStepIndex] === optIdx;
                 const isCorrectOption = optIdx === step.quiz!.correctIndex;
-                let btnStyle = 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50';
+                let btnStyle = 'bg-white dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800';
 
                 if (hasAnswered) {
                   if (isSelected && isCorrectOption) {
-                    btnStyle = 'bg-emerald-50 border-emerald-300 text-emerald-900 font-semibold';
+                    btnStyle = 'bg-emerald-50 dark:bg-emerald-950/50 border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200 font-semibold';
                   } else if (isSelected && !isCorrectOption) {
-                    btnStyle = 'bg-rose-50 border-rose-300 text-rose-900';
+                    btnStyle = 'bg-rose-50 dark:bg-rose-950/50 border-rose-300 dark:border-rose-700 text-rose-900 dark:text-rose-200';
                   } else if (isCorrectOption) {
-                    btnStyle = 'bg-emerald-50/60 border-emerald-200 text-emerald-800';
+                    btnStyle = 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300';
                   }
                 }
 
@@ -173,10 +173,10 @@ export const CurriculumGuide: React.FC<CurriculumGuideProps> = ({
                   >
                     <span>{option}</span>
                     {hasAnswered && isSelected && isCorrectOption && (
-                      <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     )}
                     {hasAnswered && isSelected && !isCorrectOption && (
-                      <XCircle className="h-4 w-4 text-rose-600 shrink-0" />
+                      <XCircle className="h-4 w-4 text-rose-600 dark:text-rose-400 shrink-0" />
                     )}
                   </button>
                 );
@@ -188,8 +188,8 @@ export const CurriculumGuide: React.FC<CurriculumGuideProps> = ({
               <div
                 className={`p-3 rounded-lg border text-xs leading-relaxed mt-3 ${
                   isCorrect
-                    ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
-                    : 'bg-amber-50 border-amber-200 text-amber-900'
+                    ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
+                    : 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200'
                 }`}
               >
                 <div className="font-bold mb-1">
@@ -203,17 +203,17 @@ export const CurriculumGuide: React.FC<CurriculumGuideProps> = ({
       </div>
 
       {/* Navigation Buttons */}
-      <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+      <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
         <button
           onClick={() => setCurrentStepIndex((prev) => Math.max(0, prev - 1))}
           disabled={currentStepIndex === 0}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:pointer-events-none transition-colors border border-slate-200 dark:border-slate-700"
         >
           <ChevronLeft className="h-4 w-4" />
           <span>Previous Step</span>
         </button>
 
-        <span className="text-xs text-slate-400">
+        <span className="text-xs text-slate-400 dark:text-slate-500">
           Module {currentStepIndex + 1} of {CURRICULUM_STEPS.length}
         </span>
 

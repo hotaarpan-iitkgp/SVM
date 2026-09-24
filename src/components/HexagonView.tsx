@@ -134,29 +134,29 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState }
   };
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-4 flex flex-col h-full">
+    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-4 flex flex-col h-full transition-colors">
       {/* Header bar */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-sm font-bold text-slate-800 tracking-tight">
+            <h2 className="text-sm font-bold text-slate-800 dark:text-white tracking-tight">
               Complex αβ Space Vector Hexagon
             </h2>
-            <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+            <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
               Sector {state.sector}
             </span>
             <span className={`px-2 py-0.5 rounded-full text-xs font-semibold border ${
               state.m <= 1.0 
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' 
                 : state.m <= 1.155 
-                ? 'bg-amber-50 text-amber-700 border-amber-200' 
-                : 'bg-rose-50 text-rose-700 border-rose-200'
+                ? 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800' 
+                : 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800'
             }`}>
               {state.m <= 1.0 ? 'Linear Region' : state.m <= 1.155 ? 'Overmodulation I' : 'Six-Step Mode'}
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Click or drag reference vector <span className="font-semibold text-rose-600">V_ref</span> inside the hexagon
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Click or drag reference vector <span className="font-semibold text-rose-600 dark:text-rose-400">V_ref</span> inside the hexagon
           </p>
         </div>
 
@@ -166,8 +166,8 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState }
             onClick={() => setShowProjections(!showProjections)}
             className={`px-2 py-1 rounded text-xs font-medium border transition-colors ${
               showProjections 
-                ? 'bg-indigo-50 text-indigo-700 border-indigo-200' 
-                : 'bg-slate-50 text-slate-600 border-slate-200'
+                ? 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800' 
+                : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
             }`}
           >
             Volt-Sec Projections
@@ -176,8 +176,8 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState }
             onClick={() => setShowTrajectory(!showTrajectory)}
             className={`px-2 py-1 rounded text-xs font-medium border transition-colors ${
               showTrajectory 
-                ? 'bg-sky-50 text-sky-700 border-sky-200' 
-                : 'bg-slate-50 text-slate-600 border-slate-200'
+                ? 'bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-800' 
+                : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
             }`}
           >
             Trajectory
@@ -270,10 +270,12 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState }
               <g key={`sector-${sp.sectorNumber}`}>
                 <path
                   d={sp.d}
-                  fill={isCurrent ? '#f0fdf4' : '#f8fafc'}
-                  stroke={isCurrent ? '#86efac' : '#e2e8f0'}
+                  className={`transition-colors duration-200 ${
+                    isCurrent 
+                      ? 'fill-emerald-50 dark:fill-emerald-950/40 stroke-emerald-300 dark:stroke-emerald-700/60' 
+                      : 'fill-slate-50 dark:fill-slate-900/60 stroke-slate-200 dark:stroke-slate-800'
+                  }`}
                   strokeWidth={isCurrent ? '1.8' : '0.8'}
-                  className="transition-colors duration-200"
                 />
                 {/* Sector Roman Numeral Label */}
                 {(() => {
@@ -287,9 +289,8 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState }
                       x={lx}
                       y={ly + 4}
                       textAnchor="middle"
-                      fill={isCurrent ? '#15803d' : '#94a3b8'}
+                      className={isCurrent ? 'fill-emerald-700 dark:fill-emerald-400 font-bold' : 'fill-slate-400 dark:fill-slate-500 font-semibold'}
                       fontSize={isCurrent ? '13' : '11'}
-                      fontWeight={isCurrent ? 'bold' : '600'}
                     >
                       Sector {romans[sp.sectorNumber - 1]}
                     </text>
@@ -303,7 +304,7 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState }
           <polygon
             points={hexagonPoints}
             fill="none"
-            stroke="#94a3b8"
+            className="stroke-slate-400 dark:stroke-slate-600"
             strokeWidth="2"
             strokeLinejoin="round"
           />
@@ -518,31 +519,31 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState }
       </div>
 
       {/* Real-time metrics bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-100 text-xs">
-        <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
-          <span className="text-slate-500 block">Angle θ</span>
-          <span className="font-bold text-slate-800 text-sm">{state.thetaDeg}°</span>
-          <span className="text-slate-400 block text-[10px]">{(state.theta).toFixed(2)} rad</span>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+        <div className="bg-slate-50 dark:bg-slate-800/60 p-2 rounded-lg border border-slate-100 dark:border-slate-700/60">
+          <span className="text-slate-500 dark:text-slate-400 block">Angle θ</span>
+          <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">{state.thetaDeg}°</span>
+          <span className="text-slate-400 dark:text-slate-500 block text-[10px]">{(state.theta).toFixed(2)} rad</span>
         </div>
-        <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
-          <span className="text-slate-500 block">Modulation Index m</span>
-          <span className="font-bold text-indigo-700 text-sm">{state.m.toFixed(2)}</span>
-          <span className="text-slate-400 block text-[10px]">|Vref| = {Math.round(state.vRefMag)} V</span>
+        <div className="bg-slate-50 dark:bg-slate-800/60 p-2 rounded-lg border border-slate-100 dark:border-slate-700/60">
+          <span className="text-slate-500 dark:text-slate-400 block">Modulation Index m</span>
+          <span className="font-bold text-indigo-700 dark:text-indigo-400 text-sm">{state.m.toFixed(2)}</span>
+          <span className="text-slate-400 dark:text-slate-500 block text-[10px]">|Vref| = {Math.round(state.vRefMag)} V</span>
         </div>
-        <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
-          <span className="text-slate-500 block">Dwell T1 ({vStart.name})</span>
-          <span className="font-bold text-blue-700 text-sm">{((state.t1 / state.ts) * 100).toFixed(1)}%</span>
-          <span className="text-slate-400 block text-[10px]">{(state.t1 * 1e6).toFixed(1)} µs</span>
+        <div className="bg-slate-50 dark:bg-slate-800/60 p-2 rounded-lg border border-slate-100 dark:border-slate-700/60">
+          <span className="text-slate-500 dark:text-slate-400 block">Dwell T1 ({vStart.name})</span>
+          <span className="font-bold text-blue-700 dark:text-blue-400 text-sm">{((state.t1 / state.ts) * 100).toFixed(1)}%</span>
+          <span className="text-slate-400 dark:text-slate-500 block text-[10px]">{(state.t1 * 1e6).toFixed(1)} µs</span>
         </div>
-        <div className="bg-slate-50 p-2 rounded-lg border border-slate-100">
-          <span className="text-slate-500 block">Dwell T2 ({vEnd.name})</span>
-          <span className="font-bold text-emerald-700 text-sm">{((state.t2 / state.ts) * 100).toFixed(1)}%</span>
-          <span className="text-slate-400 block text-[10px]">{(state.t2 * 1e6).toFixed(1)} µs</span>
+        <div className="bg-slate-50 dark:bg-slate-800/60 p-2 rounded-lg border border-slate-100 dark:border-slate-700/60">
+          <span className="text-slate-500 dark:text-slate-400 block">Dwell T2 ({vEnd.name})</span>
+          <span className="font-bold text-emerald-700 dark:text-emerald-400 text-sm">{((state.t2 / state.ts) * 100).toFixed(1)}%</span>
+          <span className="text-slate-400 dark:text-slate-500 block text-[10px]">{(state.t2 * 1e6).toFixed(1)} µs</span>
         </div>
       </div>
 
       {/* Interactive Controls & Preset Buttons */}
-      <div className="mt-3 pt-3 border-t border-slate-100 flex flex-col gap-2">
+      <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
         {/* Sliders row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>

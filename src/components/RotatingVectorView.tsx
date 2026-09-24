@@ -141,59 +141,59 @@ export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, o
   const pTipC = { x: toSvgX(netX), y: toSvgY(netY) };
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+    <div className="space-y-6 max-w-7xl mx-auto pb-12 transition-colors">
       {/* Banner */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-5">
+      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-5 transition-colors">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-200">
+            <div className="p-2.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
               <Compass className="h-6 w-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-lg font-bold text-slate-900 tracking-tight">
+                <h1 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                   Rotating Vector Formation from 3 Space & Phase Shifted Vectors
                 </h1>
-                <span className="px-2 py-0.5 rounded text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                <span className="px-2 py-0.5 rounded text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
                   Fundamental MMF Theorem
                 </span>
               </div>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Ferraris & Tesla Principle • 3 Physical Spatial Axes + 3 Time-Varying Sinusoids = Pure Rotating Magnetic Field
               </p>
             </div>
           </div>
 
           {/* Quick presets */}
-          <div className="flex flex-wrap items-center gap-1.5 bg-slate-50 p-1.5 rounded-lg border border-slate-200 text-xs">
-            <span className="text-[11px] font-semibold text-slate-500 px-1">Presets:</span>
+          <div className="flex flex-wrap items-center gap-1.5 bg-slate-50 dark:bg-slate-800/60 p-1.5 rounded-lg border border-slate-200 dark:border-slate-700/60 text-xs">
+            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 px-1">Presets:</span>
             <button
               onClick={() => applyPreset('balanced-pos')}
-              className="px-2.5 py-1 rounded bg-white hover:bg-slate-100 text-slate-700 font-medium border border-slate-200 shadow-2xs transition-colors"
+              className="px-2.5 py-1 rounded bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium border border-slate-200 dark:border-slate-700 shadow-2xs transition-colors"
             >
               Balanced 120° (CCW)
             </button>
             <button
               onClick={() => applyPreset('balanced-neg')}
-              className="px-2.5 py-1 rounded bg-white hover:bg-slate-100 text-slate-700 font-medium border border-slate-200 shadow-2xs transition-colors"
+              className="px-2.5 py-1 rounded bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium border border-slate-200 dark:border-slate-700 shadow-2xs transition-colors"
             >
               Reverse (CW)
             </button>
             <button
               onClick={() => applyPreset('in-phase')}
-              className="px-2.5 py-1 rounded bg-white hover:bg-slate-100 text-slate-700 font-medium border border-slate-200 shadow-2xs transition-colors"
+              className="px-2.5 py-1 rounded bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium border border-slate-200 dark:border-slate-700 shadow-2xs transition-colors"
             >
               In-Phase (Pulsating)
             </button>
             <button
               onClick={() => applyPreset('open-phase')}
-              className="px-2.5 py-1 rounded bg-white hover:bg-slate-100 text-slate-700 font-medium border border-slate-200 shadow-2xs transition-colors"
+              className="px-2.5 py-1 rounded bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium border border-slate-200 dark:border-slate-700 shadow-2xs transition-colors"
             >
               Open Phase C
             </button>
             <button
               onClick={() => applyPreset('two-phase')}
-              className="px-2.5 py-1 rounded bg-white hover:bg-slate-100 text-slate-700 font-medium border border-slate-200 shadow-2xs transition-colors"
+              className="px-2.5 py-1 rounded bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium border border-slate-200 dark:border-slate-700 shadow-2xs transition-colors"
             >
               2-Phase 90°
             </button>
@@ -204,13 +204,13 @@ export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, o
       {/* Main Grid: Vector Simulation Left, Controls & Waveforms Right */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Column (7 cols): 2D Vector Plane Visualization */}
-        <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200 shadow-xs p-5 flex flex-col items-center">
-          <div className="w-full flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="lg:col-span-7 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-5 flex flex-col items-center transition-colors">
+          <div className="w-full flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-bold text-slate-800">
+              <h2 className="text-sm font-bold text-slate-800 dark:text-white">
                 Spatial Vector Addition Plane
               </h2>
-              <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+              <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
                 |F_net| = {netMag.toFixed(3)}
               </span>
             </div>
@@ -218,14 +218,14 @@ export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, o
             <div className="flex items-center gap-2 text-xs">
               <button
                 onClick={() => setDisplayMode(displayMode === 'tip-to-tail' ? 'origin' : 'tip-to-tail')}
-                className="px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium border border-slate-200 transition-colors"
+                className="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium border border-slate-200 dark:border-slate-700 transition-colors"
               >
                 Mode: {displayMode === 'tip-to-tail' ? 'Tip-to-Tail Addition' : 'Center Star'}
               </button>
               <button
                 onClick={resetTrajectory}
                 title="Clear trajectory history"
-                className="p-1 rounded text-slate-500 hover:text-slate-800 hover:bg-slate-100 border border-slate-200"
+                className="p-1 rounded text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
               </button>
@@ -436,22 +436,22 @@ export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, o
           </div>
 
           {/* Legend and Status Cards */}
-          <div className="w-full grid grid-cols-4 gap-2 pt-2 border-t border-slate-100 text-xs text-center font-mono">
-            <div className="p-2 rounded bg-blue-50 border border-blue-200">
-              <span className="block text-[10px] text-blue-600 font-semibold">Phase A Vector</span>
-              <span className="font-bold text-blue-900">{valA.toFixed(2)}</span>
+          <div className="w-full grid grid-cols-4 gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs text-center font-mono">
+            <div className="p-2 rounded bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800">
+              <span className="block text-[10px] text-blue-600 dark:text-blue-400 font-semibold">Phase A Vector</span>
+              <span className="font-bold text-blue-900 dark:text-blue-200">{valA.toFixed(2)}</span>
             </div>
-            <div className="p-2 rounded bg-emerald-50 border border-emerald-200">
-              <span className="block text-[10px] text-emerald-600 font-semibold">Phase B Vector</span>
-              <span className="font-bold text-emerald-900">{valB.toFixed(2)}</span>
+            <div className="p-2 rounded bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
+              <span className="block text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">Phase B Vector</span>
+              <span className="font-bold text-emerald-900 dark:text-emerald-200">{valB.toFixed(2)}</span>
             </div>
-            <div className="p-2 rounded bg-amber-50 border border-amber-200">
-              <span className="block text-[10px] text-amber-600 font-semibold">Phase C Vector</span>
-              <span className="font-bold text-amber-900">{valC.toFixed(2)}</span>
+            <div className="p-2 rounded bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800">
+              <span className="block text-[10px] text-amber-600 dark:text-amber-400 font-semibold">Phase C Vector</span>
+              <span className="font-bold text-amber-900 dark:text-amber-200">{valC.toFixed(2)}</span>
             </div>
-            <div className="p-2 rounded bg-indigo-50 border border-indigo-200">
-              <span className="block text-[10px] text-indigo-600 font-semibold">Resultant F_net</span>
-              <span className="font-bold text-indigo-900">{netMag.toFixed(2)} ∠{netAngleDeg.toFixed(0)}°</span>
+            <div className="p-2 rounded bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800">
+              <span className="block text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold">Resultant F_net</span>
+              <span className="font-bold text-indigo-900 dark:text-indigo-200">{netMag.toFixed(2)} ∠{netAngleDeg.toFixed(0)}°</span>
             </div>
           </div>
         </div>
@@ -459,10 +459,10 @@ export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, o
         {/* Right Column (5 cols): Space & Phase Angle Sliders & Live Signals */}
         <div className="lg:col-span-5 space-y-4">
           {/* Sliders Card */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-5 space-y-5">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-              <h3 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                <Sliders className="h-4 w-4 text-indigo-600" />
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-5 space-y-5 transition-colors">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+              <h3 className="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
+                <Sliders className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                 Space & Phase Angle Controls
               </h3>
               <button
@@ -618,19 +618,19 @@ export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, o
           </div>
 
           {/* Theoretical Explanation Card */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-4 text-xs space-y-2">
-            <h4 className="font-bold text-slate-900 flex items-center gap-1.5">
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-4 text-xs space-y-2 transition-colors">
+            <h4 className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
               <Sparkles className="h-4 w-4 text-amber-500" />
               Mathematical Proof of Constant Rotating Field
             </h4>
-            <p className="text-slate-600 leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               When 3 windings displaced in space by <strong>120°</strong> carry balanced 3-phase currents displaced in time by <strong>120°</strong>, their instantaneous pulsating vectors sum to a single constant-magnitude rotating vector:
             </p>
-            <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200 font-mono text-[11px] text-slate-800 space-y-1">
+            <div className="bg-slate-50 dark:bg-slate-800/70 p-2.5 rounded-lg border border-slate-200 dark:border-slate-700 font-mono text-[11px] text-slate-800 dark:text-slate-200 space-y-1">
               <div>F_net(t) = i_a(t)·e^(j0°) + i_b(t)·e^(j120°) + i_c(t)·e^(j240°)</div>
-              <div className="text-indigo-700 font-bold">= (3/2) · I_m · e^(jωt)</div>
+              <div className="text-indigo-700 dark:text-indigo-400 font-bold">= (3/2) · I_m · e^(jωt)</div>
             </div>
-            <p className="text-slate-500 text-[11px]">
+            <p className="text-slate-500 dark:text-slate-400 text-[11px]">
               <strong>Try it:</strong> Change Phase B or C angle to observe the circular trajectory distort into an ellipse (unbalance), collapse into a line (pulsating field), or reverse direction!
             </p>
           </div>
