@@ -147,15 +147,15 @@ export default function App() {
       setState((prev) => {
         if (!prev.isPlaying) return prev;
 
-        // Advance theta at fundamental frequency: omega = 2*PI*f0
-        // Scaled by simulation speed multiplier (0.01x .. 0.10x)
-        const dTheta = 2 * Math.PI * prev.f0 * dt * prev.speed * 0.2;
+        // Advance theta smoothly at scaled teaching frequency:
+        // prev.speed (0.01x .. 0.10x) maps to 0.10 rev/s (10s/cycle) to 1.0 rev/s (1s/cycle)
+        const dTheta = 2 * Math.PI * 10 * dt * prev.speed;
         let newTheta = (prev.theta + dTheta) % (2 * Math.PI);
         if (newTheta < 0) newTheta += 2 * Math.PI;
         const newThetaDeg = Math.round((newTheta * 180) / Math.PI);
 
         // Advance subCycleProgress within Ts
-        const dSub = (dt * prev.fsw * prev.speed * 0.08) % 1;
+        const dSub = (dt * prev.fsw * prev.speed * 0.25) % 1;
         const newSub = (prev.subCycleProgress + dSub) % 1;
 
         const computed = calculateSvpwm(newTheta, prev.m, prev.vdc, prev.fsw);
@@ -317,12 +317,12 @@ export default function App() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
               {/* Left Column: Complex Hexagon */}
               <div className="flex flex-col h-full min-h-[440px]">
-                <HexagonView state={state} onUpdateState={handleUpdateState} />
+                <HexagonView state={state} onUpdateState={handleUpdateState} darkMode={darkMode} />
               </div>
 
               {/* Right Column: Symmetrical 7-Segment PWM Sub-Cycle Timing */}
               <div className="flex flex-col h-full min-h-[440px]">
-                <PwmSequenceView state={state} onUpdateState={handleUpdateState} />
+                <PwmSequenceView state={state} onUpdateState={handleUpdateState} darkMode={darkMode} />
               </div>
             </div>
 
@@ -330,7 +330,7 @@ export default function App() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
               {/* Left: 3-Phase Inverter Live Conduction Schematic */}
               <div className="flex flex-col h-full">
-                <InverterCircuitView state={state} />
+                <InverterCircuitView state={state} darkMode={darkMode} />
               </div>
 
               {/* Right: Harmonic Spectrum (FFT) & DC Bus Utilization */}
@@ -341,7 +341,7 @@ export default function App() {
 
             {/* Third Row: Full-Cycle Waveforms (Saddle Wave, PWM Pulses, Filtered AC) */}
             <div className="w-full">
-              <WaveformsView state={state} onUpdateState={handleUpdateState} />
+              <WaveformsView state={state} onUpdateState={handleUpdateState} darkMode={darkMode} />
             </div>
           </div>
         )}
@@ -349,7 +349,7 @@ export default function App() {
         {/* Tab 2: Rotating Vector Formation (Space and Phase shifted vectors) */}
         {activeTab === 'rotating-field' && (
           <div className="py-2">
-            <RotatingVectorView state={state} onUpdateState={handleUpdateState} />
+            <RotatingVectorView state={state} onUpdateState={handleUpdateState} darkMode={darkMode} />
           </div>
         )}
 
@@ -363,7 +363,7 @@ export default function App() {
         {/* Tab 3: Multilevel Space Vector Modulation (3-Level NPC) */}
         {activeTab === 'multilevel' && (
           <div className="py-2">
-            <MultilevelSvmView state={state} onUpdateState={handleUpdateState} />
+            <MultilevelSvmView state={state} onUpdateState={handleUpdateState} darkMode={darkMode} />
           </div>
         )}
 

@@ -6,9 +6,10 @@ import { Clock, Sliders, Info, CheckCircle2 } from 'lucide-react';
 interface PwmSequenceViewProps {
   state: SvpwmState;
   onUpdateState: (partial: Partial<SvpwmState>) => void;
+  darkMode?: boolean;
 }
 
-export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdateState }) => {
+export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdateState, darkMode }) => {
   const [carrierMode, setCarrierMode] = useState<'v-shape' | 'peak-shape'>('v-shape');
 
   // Compute exact 7 segments for current sector and dwell times
@@ -180,8 +181,8 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
                   y={22}
                   width={Math.max(1, segW)}
                   height={timeAxisY - 22}
-                  fill={isSegActive ? '#fef3c7' : i % 2 === 0 ? '#f8fafc' : '#ffffff'}
-                  opacity={isSegActive ? 0.75 : 0.9}
+                  fill={isSegActive ? (darkMode ? '#78350f44' : '#fef3c7') : i % 2 === 0 ? (darkMode ? '#1e293b55' : '#f8fafc') : (darkMode ? '#0f172a' : '#ffffff')}
+                  opacity={isSegActive ? 0.8 : 0.9}
                   className="transition-colors duration-150"
                 />
                 {/* Boundary line */}
@@ -190,7 +191,7 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
                   y1={22}
                   x2={x}
                   y2={timeAxisY}
-                  stroke="#e2e8f0"
+                  stroke={darkMode ? '#334155' : '#e2e8f0'}
                   strokeWidth="1"
                   strokeDasharray="2 2"
                 />
@@ -199,7 +200,7 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
                   x={x + segW / 2}
                   y={17}
                   textAnchor="middle"
-                  fill={isSegActive ? '#b45309' : '#64748b'}
+                  fill={isSegActive ? (darkMode ? '#f59e0b' : '#b45309') : (darkMode ? '#94a3b8' : '#64748b')}
                   fontSize="9.5"
                   fontWeight={isSegActive ? 'bold' : '600'}
                 >
@@ -215,28 +216,28 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
             y1={22}
             x2={padLeft + plotWidth}
             y2={timeAxisY}
-            stroke="#e2e8f0"
+            stroke={darkMode ? '#334155' : '#e2e8f0'}
             strokeWidth="1"
             strokeDasharray="2 2"
           />
 
           {/* ===== CARRIER WAVEFORM SECTION ===== */}
           {/* Horizontal carrier grid lines at 1.0, 0.5, 0.0 */}
-          <line x1={padLeft} y1={carrierTop} x2={padLeft + plotWidth} y2={carrierTop} stroke="#e2e8f0" strokeWidth="1" strokeDasharray="3 3" />
-          <line x1={padLeft} y1={(carrierTop + carrierBottom) / 2} x2={padLeft + plotWidth} y2={(carrierTop + carrierBottom) / 2} stroke="#f1f5f9" strokeWidth="1" />
-          <line x1={padLeft} y1={carrierBottom} x2={padLeft + plotWidth} y2={carrierBottom} stroke="#e2e8f0" strokeWidth="1" />
+          <line x1={padLeft} y1={carrierTop} x2={padLeft + plotWidth} y2={carrierTop} stroke={darkMode ? '#334155' : '#e2e8f0'} strokeWidth="1" strokeDasharray="3 3" />
+          <line x1={padLeft} y1={(carrierTop + carrierBottom) / 2} x2={padLeft + plotWidth} y2={(carrierTop + carrierBottom) / 2} stroke={darkMode ? '#1e293b' : '#f1f5f9'} strokeWidth="1" />
+          <line x1={padLeft} y1={carrierBottom} x2={padLeft + plotWidth} y2={carrierBottom} stroke={darkMode ? '#334155' : '#e2e8f0'} strokeWidth="1" />
 
           {/* Left Y-axis ticks for Carrier */}
-          <text x={padLeft - 8} y={carrierTop + 4} textAnchor="end" fill="#475569" fontSize="10" fontWeight="bold">
+          <text x={padLeft - 8} y={carrierTop + 4} textAnchor="end" fill={darkMode ? '#cbd5e1' : '#475569'} fontSize="10" fontWeight="bold">
             1.0 (+Vdc)
           </text>
-          <text x={padLeft - 8} y={(carrierTop + carrierBottom) / 2 + 3} textAnchor="end" fill="#94a3b8" fontSize="8.5">
+          <text x={padLeft - 8} y={(carrierTop + carrierBottom) / 2 + 3} textAnchor="end" fill={darkMode ? '#64748b' : '#94a3b8'} fontSize="8.5">
             0.5
           </text>
-          <text x={padLeft - 8} y={carrierBottom + 3} textAnchor="end" fill="#475569" fontSize="10" fontWeight="bold">
+          <text x={padLeft - 8} y={carrierBottom + 3} textAnchor="end" fill={darkMode ? '#cbd5e1' : '#475569'} fontSize="10" fontWeight="bold">
             0.0 (0V)
           </text>
-          <text x={padLeft - 8} y={carrierTop + 24} textAnchor="end" fill="#64748b" fontSize="8.5" fontStyle="italic">
+          <text x={padLeft - 8} y={carrierTop + 24} textAnchor="end" fill={darkMode ? '#94a3b8' : '#64748b'} fontSize="8.5" fontStyle="italic">
             Carrier
           </text>
 
@@ -244,7 +245,7 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
           <path
             d={carrierPath}
             fill="none"
-            stroke="#475569"
+            stroke={darkMode ? '#94a3b8' : '#475569'}
             strokeWidth="2.2"
             strokeDasharray="4 3"
           />
@@ -318,11 +319,11 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
             y1={172}
             x2={padLeft + plotWidth + 20}
             y2={172}
-            stroke="#cbd5e1"
+            stroke={darkMode ? '#334155' : '#cbd5e1'}
             strokeWidth="1"
             strokeDasharray="4 4"
           />
-          <text x={padLeft - 8} y={175} textAnchor="end" fill="#94a3b8" fontSize="8" fontWeight="bold">
+          <text x={padLeft - 8} y={175} textAnchor="end" fill={darkMode ? '#64748b' : '#94a3b8'} fontSize="8" fontWeight="bold">
             GATES
           </text>
 
@@ -331,15 +332,15 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
           <text x={padLeft - 8} y={gateAH + 14} textAnchor="end" fill="#2563eb" fontSize="10" fontWeight="bold">
             Sa (Leg A)
           </text>
-          <text x={padLeft - 8} y={gateAH + 4} textAnchor="end" fill="#94a3b8" fontSize="7.5">
+          <text x={padLeft - 8} y={gateAH + 4} textAnchor="end" fill={darkMode ? '#64748b' : '#94a3b8'} fontSize="7.5">
             HIGH
           </text>
-          <text x={padLeft - 8} y={gateAH + pulseH} textAnchor="end" fill="#94a3b8" fontSize="7.5">
+          <text x={padLeft - 8} y={gateAH + pulseH} textAnchor="end" fill={darkMode ? '#64748b' : '#94a3b8'} fontSize="7.5">
             LOW
           </text>
           <path
             d={getGatePath(state.da, gateAH)}
-            fill="#dbeafe"
+            fill={darkMode ? 'rgba(37, 99, 235, 0.25)' : '#dbeafe'}
             fillOpacity="0.6"
             stroke="#2563eb"
             strokeWidth="2.2"
@@ -349,15 +350,15 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
           <text x={padLeft - 8} y={gateBH + 14} textAnchor="end" fill="#059669" fontSize="10" fontWeight="bold">
             Sb (Leg B)
           </text>
-          <text x={padLeft - 8} y={gateBH + 4} textAnchor="end" fill="#94a3b8" fontSize="7.5">
+          <text x={padLeft - 8} y={gateBH + 4} textAnchor="end" fill={darkMode ? '#64748b' : '#94a3b8'} fontSize="7.5">
             HIGH
           </text>
-          <text x={padLeft - 8} y={gateBH + pulseH} textAnchor="end" fill="#94a3b8" fontSize="7.5">
+          <text x={padLeft - 8} y={gateBH + pulseH} textAnchor="end" fill={darkMode ? '#64748b' : '#94a3b8'} fontSize="7.5">
             LOW
           </text>
           <path
             d={getGatePath(state.db, gateBH)}
-            fill="#d1fae5"
+            fill={darkMode ? 'rgba(5, 150, 105, 0.25)' : '#d1fae5'}
             fillOpacity="0.6"
             stroke="#059669"
             strokeWidth="2.2"
@@ -367,15 +368,15 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
           <text x={padLeft - 8} y={gateCH + 14} textAnchor="end" fill="#d97706" fontSize="10" fontWeight="bold">
             Sc (Leg C)
           </text>
-          <text x={padLeft - 8} y={gateCH + 4} textAnchor="end" fill="#94a3b8" fontSize="7.5">
+          <text x={padLeft - 8} y={gateCH + 4} textAnchor="end" fill={darkMode ? '#64748b' : '#94a3b8'} fontSize="7.5">
             HIGH
           </text>
-          <text x={padLeft - 8} y={gateCH + pulseH} textAnchor="end" fill="#94a3b8" fontSize="7.5">
+          <text x={padLeft - 8} y={gateCH + pulseH} textAnchor="end" fill={darkMode ? '#64748b' : '#94a3b8'} fontSize="7.5">
             LOW
           </text>
           <path
             d={getGatePath(state.dc, gateCH)}
-            fill="#fef3c7"
+            fill={darkMode ? 'rgba(217, 119, 6, 0.25)' : '#fef3c7'}
             fillOpacity="0.6"
             stroke="#d97706"
             strokeWidth="2.2"

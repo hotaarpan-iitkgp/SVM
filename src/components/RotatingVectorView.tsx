@@ -18,9 +18,10 @@ import {
 interface RotatingVectorViewProps {
   state: SvpwmState;
   onUpdateState: (partial: Partial<SvpwmState>) => void;
+  darkMode?: boolean;
 }
 
-export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, onUpdateState }) => {
+export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, onUpdateState, darkMode }) => {
   // Spatial angles of the 3 coil axes (degrees)
   const [spaceAngleA, setSpaceAngleA] = useState(0);
   const [spaceAngleB, setSpaceAngleB] = useState(120);
@@ -243,8 +244,8 @@ export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, o
                 cx={center}
                 cy={center}
                 r={1.5 * scale}
-                fill="#f8fafc"
-                stroke="#cbd5e1"
+                fill={darkMode ? '#0f172a' : '#f8fafc'}
+                stroke={darkMode ? '#334155' : '#cbd5e1'}
                 strokeWidth="1.5"
                 strokeDasharray="4 4"
               />
@@ -253,7 +254,7 @@ export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, o
                 cy={center}
                 r={scale}
                 fill="none"
-                stroke="#e2e8f0"
+                stroke={darkMode ? '#1e293b' : '#e2e8f0'}
                 strokeWidth="1"
               />
 
@@ -431,7 +432,7 @@ export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, o
               <circle cx={toSvgX(netX)} cy={toSvgY(netY)} r="6" fill="#4f46e5" stroke="#ffffff" strokeWidth="2" />
 
               {/* Center Origin Dot */}
-              <circle cx={center} cy={center} r="4" fill="#0f172a" />
+              <circle cx={center} cy={center} r="4" fill={darkMode ? '#f8fafc' : '#0f172a'} />
             </svg>
           </div>
 
@@ -478,35 +479,35 @@ export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, o
             {/* Space Angles Sliders (Physical Orientation of Coils) */}
             <div className="space-y-3">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-slate-700 flex items-center gap-1">
+                <span className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-blue-600 inline-block" />
                   Spatial Axis Angles (Coil Orientation):
                 </span>
-                <span className="text-[11px] text-slate-400">Fixed in Stator</span>
+                <span className="text-[11px] text-slate-400 dark:text-slate-500">Fixed in Stator</span>
               </div>
 
               {/* Axis A Space Angle */}
               <div className="space-y-1">
                 <div className="flex justify-between text-xs">
-                  <span className="text-slate-600">Phase A Axis (θ_A):</span>
-                  <span className="font-mono font-bold text-blue-700">{spaceAngleA}°</span>
+                  <span className="text-slate-600 dark:text-slate-400">Phase A Axis (θ_A):</span>
+                  <span className="font-mono font-bold text-blue-700 dark:text-blue-400">{spaceAngleA}°</span>
                 </div>
                 <input
                   type="range"
                   min="-180"
-                  max="180"
+                  max="360"
                   step="5"
                   value={spaceAngleA}
                   onChange={(e) => { setSpaceAngleA(Number(e.target.value)); resetTrajectory(); }}
-                  className="w-full accent-blue-600 h-1.5 bg-slate-200 rounded cursor-pointer"
+                  className="w-full accent-blue-600 h-1.5 bg-slate-200 dark:bg-slate-700 rounded cursor-pointer"
                 />
               </div>
 
               {/* Axis B Space Angle */}
               <div className="space-y-1">
                 <div className="flex justify-between text-xs">
-                  <span className="text-slate-600">Phase B Axis (θ_B):</span>
-                  <span className="font-mono font-bold text-emerald-700">{spaceAngleB}°</span>
+                  <span className="text-slate-600 dark:text-slate-400">Phase B Axis (θ_B):</span>
+                  <span className="font-mono font-bold text-emerald-700 dark:text-emerald-400">{spaceAngleB}°</span>
                 </div>
                 <input
                   type="range"
@@ -515,15 +516,15 @@ export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, o
                   step="5"
                   value={spaceAngleB}
                   onChange={(e) => { setSpaceAngleB(Number(e.target.value)); resetTrajectory(); }}
-                  className="w-full accent-emerald-600 h-1.5 bg-slate-200 rounded cursor-pointer"
+                  className="w-full accent-emerald-600 h-1.5 bg-slate-200 dark:bg-slate-700 rounded cursor-pointer"
                 />
               </div>
 
               {/* Axis C Space Angle */}
               <div className="space-y-1">
                 <div className="flex justify-between text-xs">
-                  <span className="text-slate-600">Phase C Axis (θ_C):</span>
-                  <span className="font-mono font-bold text-amber-700">{spaceAngleC}°</span>
+                  <span className="text-slate-600 dark:text-slate-400">Phase C Axis (θ_C):</span>
+                  <span className="font-mono font-bold text-amber-700 dark:text-amber-400">{spaceAngleC}°</span>
                 </div>
                 <input
                   type="range"
@@ -532,26 +533,26 @@ export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, o
                   step="5"
                   value={spaceAngleC}
                   onChange={(e) => { setSpaceAngleC(Number(e.target.value)); resetTrajectory(); }}
-                  className="w-full accent-amber-600 h-1.5 bg-slate-200 rounded cursor-pointer"
+                  className="w-full accent-amber-600 h-1.5 bg-slate-200 dark:bg-slate-700 rounded cursor-pointer"
                 />
               </div>
             </div>
 
             {/* Electrical Phase Shift Sliders (Time-Domain Shift) */}
-            <div className="space-y-3 pt-3 border-t border-slate-100">
+            <div className="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-slate-700 flex items-center gap-1">
+                <span className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-indigo-600 inline-block" />
                   Electrical Phase Angles (Time Shift ϕ):
                 </span>
-                <span className="text-[11px] text-slate-400">cos(ωt + ϕ)</span>
+                <span className="text-[11px] text-slate-400 dark:text-slate-500">cos(ωt + ϕ)</span>
               </div>
 
               {/* Phase A Phase Shift */}
               <div className="space-y-1">
                 <div className="flex justify-between text-xs">
-                  <span className="text-slate-600">Phase A Shift (ϕ_A):</span>
-                  <span className="font-mono font-bold text-blue-700">{phaseAngleA}°</span>
+                  <span className="text-slate-600 dark:text-slate-400">Phase A Shift (ϕ_A):</span>
+                  <span className="font-mono font-bold text-blue-700 dark:text-blue-400">{phaseAngleA}°</span>
                 </div>
                 <input
                   type="range"
@@ -560,15 +561,15 @@ export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, o
                   step="5"
                   value={phaseAngleA}
                   onChange={(e) => { setPhaseAngleA(Number(e.target.value)); resetTrajectory(); }}
-                  className="w-full accent-blue-600 h-1.5 bg-slate-200 rounded cursor-pointer"
+                  className="w-full accent-blue-600 h-1.5 bg-slate-200 dark:bg-slate-700 rounded cursor-pointer"
                 />
               </div>
 
               {/* Phase B Phase Shift */}
               <div className="space-y-1">
                 <div className="flex justify-between text-xs">
-                  <span className="text-slate-600">Phase B Shift (ϕ_B):</span>
-                  <span className="font-mono font-bold text-emerald-700">{phaseAngleB}°</span>
+                  <span className="text-slate-600 dark:text-slate-400">Phase B Shift (ϕ_B):</span>
+                  <span className="font-mono font-bold text-emerald-700 dark:text-emerald-400">{phaseAngleB}°</span>
                 </div>
                 <input
                   type="range"
@@ -577,15 +578,15 @@ export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, o
                   step="5"
                   value={phaseAngleB}
                   onChange={(e) => { setPhaseAngleB(Number(e.target.value)); resetTrajectory(); }}
-                  className="w-full accent-emerald-600 h-1.5 bg-slate-200 rounded cursor-pointer"
+                  className="w-full accent-emerald-600 h-1.5 bg-slate-200 dark:bg-slate-700 rounded cursor-pointer"
                 />
               </div>
 
               {/* Phase C Phase Shift */}
               <div className="space-y-1">
                 <div className="flex justify-between text-xs">
-                  <span className="text-slate-600">Phase C Shift (ϕ_C):</span>
-                  <span className="font-mono font-bold text-amber-700">{phaseAngleC}°</span>
+                  <span className="text-slate-600 dark:text-slate-400">Phase C Shift (ϕ_C):</span>
+                  <span className="font-mono font-bold text-amber-700 dark:text-amber-400">{phaseAngleC}°</span>
                 </div>
                 <input
                   type="range"
@@ -594,16 +595,16 @@ export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, o
                   step="5"
                   value={phaseAngleC}
                   onChange={(e) => { setPhaseAngleC(Number(e.target.value)); resetTrajectory(); }}
-                  className="w-full accent-amber-600 h-1.5 bg-slate-200 rounded cursor-pointer"
+                  className="w-full accent-amber-600 h-1.5 bg-slate-200 dark:bg-slate-700 rounded cursor-pointer"
                 />
               </div>
             </div>
 
             {/* Time Instant Scrub Bar */}
-            <div className="pt-3 border-t border-slate-100 space-y-1">
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1">
               <div className="flex justify-between text-xs">
-                <span className="font-bold text-slate-700">Instantaneous Time Angle (ωt):</span>
-                <span className="font-mono font-bold text-indigo-700">{Math.round(state.thetaDeg)}°</span>
+                <span className="font-bold text-slate-700 dark:text-slate-300">Instantaneous Time Angle (ωt):</span>
+                <span className="font-mono font-bold text-indigo-700 dark:text-indigo-400">{Math.round(state.thetaDeg)}°</span>
               </div>
               <input
                 type="range"
@@ -612,7 +613,7 @@ export const RotatingVectorView: React.FC<RotatingVectorViewProps> = ({ state, o
                 step="1"
                 value={state.thetaDeg}
                 onChange={(e) => onUpdateState({ thetaDeg: Number(e.target.value) })}
-                className="w-full accent-indigo-600 h-1.5 bg-slate-200 rounded cursor-pointer"
+                className="w-full accent-indigo-600 h-1.5 bg-slate-200 dark:bg-slate-700 rounded cursor-pointer"
               />
             </div>
           </div>

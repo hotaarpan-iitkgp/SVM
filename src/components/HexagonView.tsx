@@ -16,9 +16,10 @@ import {
 interface HexagonViewProps {
   state: SvpwmState;
   onUpdateState: (partial: Partial<SvpwmState>) => void;
+  darkMode?: boolean;
 }
 
-export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState }) => {
+export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState, darkMode }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [showProjections, setShowProjections] = useState(true);
@@ -504,12 +505,12 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState }
           </text>
 
           {/* Center Origin: V0 (000) and V7 (111) */}
-          <circle cx={center} cy={center} r="6" fill="#0f172a" stroke="#ffffff" strokeWidth="1.5" />
+          <circle cx={center} cy={center} r="6" fill={darkMode ? '#f8fafc' : '#0f172a'} stroke={darkMode ? '#0f172a' : '#ffffff'} strokeWidth="1.5" />
           <text
             x={center}
             y={center + 18}
             textAnchor="middle"
-            fill="#0f172a"
+            fill={darkMode ? '#f8fafc' : '#0f172a'}
             fontSize="9"
             fontWeight="bold"
           >
@@ -547,19 +548,19 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState }
         {/* Sliders row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <div className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+            <div className="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               <span>Angle Scrub: {state.thetaDeg}°</span>
               <div className="flex gap-1">
                 <button
                   onClick={() => stepAngle(-5)}
-                  className="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700"
+                  className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors"
                   title="Step -5°"
                 >
                   -5°
                 </button>
                 <button
                   onClick={() => stepAngle(5)}
-                  className="px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700"
+                  className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors"
                   title="Step +5°"
                 >
                   +5°
@@ -579,14 +580,14 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState }
                   isPlaying: false,
                 });
               }}
-              className="w-full accent-rose-600 h-1.5 bg-slate-200 rounded-lg cursor-pointer"
+              className="w-full accent-rose-600 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg cursor-pointer"
             />
           </div>
 
           <div>
-            <div className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+            <div className="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               <span>Modulation Index (m): {state.m.toFixed(2)}</span>
-              <span className="text-slate-400 font-normal">Max Linear: 1.00</span>
+              <span className="text-slate-400 dark:text-slate-500 font-normal">Max Linear: 1.00</span>
             </div>
             <input
               type="range"
@@ -595,20 +596,20 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState }
               step="0.01"
               value={state.m}
               onChange={(e) => onUpdateState({ m: Number(e.target.value) })}
-              className="w-full accent-indigo-600 h-1.5 bg-slate-200 rounded-lg cursor-pointer"
+              className="w-full accent-indigo-600 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg cursor-pointer"
             />
           </div>
         </div>
 
         {/* Quick Presets for Students */}
         <div className="flex items-center gap-1.5 flex-wrap pt-1">
-          <span className="text-xs text-slate-500 font-medium mr-1">Presets:</span>
+          <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mr-1">Presets:</span>
           <button
             onClick={() => onUpdateState({ m: 0.5, isPlaying: true })}
             className={`px-2 py-1 rounded text-xs border font-medium transition-colors ${
               state.m === 0.5 
-                ? 'bg-sky-600 text-white border-sky-600' 
-                : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                ? 'bg-sky-600 text-white border-sky-600 font-bold' 
+                : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
             }`}
           >
             Low (m = 0.5)
@@ -617,8 +618,8 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState }
             onClick={() => onUpdateState({ m: 0.85, isPlaying: true })}
             className={`px-2 py-1 rounded text-xs border font-medium transition-colors ${
               state.m === 0.85 
-                ? 'bg-sky-600 text-white border-sky-600' 
-                : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                ? 'bg-sky-600 text-white border-sky-600 font-bold' 
+                : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
             }`}
           >
             Nominal (m = 0.85)
@@ -627,8 +628,8 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState }
             onClick={() => onUpdateState({ m: 1.0, isPlaying: true })}
             className={`px-2 py-1 rounded text-xs border font-medium transition-colors ${
               state.m === 1.0 
-                ? 'bg-sky-600 text-white border-sky-600' 
-                : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                ? 'bg-sky-600 text-white border-sky-600 font-bold' 
+                : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
             }`}
           >
             Max Linear (m = 1.0)
@@ -637,8 +638,8 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState }
             onClick={() => onUpdateState({ m: 1.12, isPlaying: true })}
             className={`px-2 py-1 rounded text-xs border font-medium transition-colors ${
               state.m === 1.12 
-                ? 'bg-sky-600 text-white border-sky-600' 
-                : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                ? 'bg-sky-600 text-white border-sky-600 font-bold' 
+                : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
             }`}
           >
             Overmod I (m = 1.12)
@@ -647,8 +648,8 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState }
             onClick={() => onUpdateState({ m: 1.25, isPlaying: true })}
             className={`px-2 py-1 rounded text-xs border font-medium transition-colors ${
               state.m === 1.25 
-                ? 'bg-sky-600 text-white border-sky-600' 
-                : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                ? 'bg-sky-600 text-white border-sky-600 font-bold' 
+                : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
             }`}
           >
             Six-Step (m = 1.25)

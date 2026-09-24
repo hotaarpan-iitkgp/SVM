@@ -6,9 +6,10 @@ import { Layers, Activity, Sliders, Eye } from 'lucide-react';
 interface WaveformsViewProps {
   state: SvpwmState;
   onUpdateState: (partial: Partial<SvpwmState>) => void;
+  darkMode?: boolean;
 }
 
-export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateState }) => {
+export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateState, darkMode }) => {
   const [activeTab, setActiveTab] = useState<'saddle' | 'pwm' | 'duties'>('saddle');
   const [showZso, setShowZso] = useState(true);
 
@@ -113,7 +114,7 @@ export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateSta
             y1={midY}
             x2={padLeft + plotWidth}
             y2={midY}
-            stroke="#cbd5e1"
+            stroke={darkMode ? '#334155' : '#cbd5e1'}
             strokeWidth="1.2"
           />
 
@@ -127,7 +128,7 @@ export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateSta
                   y1={padTop}
                   x2={x}
                   y2={padTop + plotHeight}
-                  stroke="#e2e8f0"
+                  stroke={darkMode ? '#1e293b' : '#e2e8f0'}
                   strokeWidth="1"
                   strokeDasharray="3 3"
                 />
@@ -135,7 +136,7 @@ export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateSta
                   x={x - (plotWidth / 12)}
                   y={padTop + 10}
                   textAnchor="middle"
-                  fill="#94a3b8"
+                  fill={darkMode ? '#64748b' : '#94a3b8'}
                   fontSize="8"
                   fontWeight="bold"
                 >
@@ -149,7 +150,7 @@ export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateSta
             x={toX(330)}
             y={padTop + 10}
             textAnchor="middle"
-            fill="#94a3b8"
+            fill={darkMode ? '#64748b' : '#94a3b8'}
             fontSize="8"
             fontWeight="bold"
           >
@@ -237,17 +238,17 @@ export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateSta
                 y1={toYDuty(0.5)}
                 x2={padLeft + plotWidth}
                 y2={toYDuty(0.5)}
-                stroke="#cbd5e1"
+                stroke={darkMode ? '#334155' : '#cbd5e1'}
                 strokeWidth="1"
                 strokeDasharray="4 4"
               />
-              <text x={padLeft - 6} y={toYDuty(0.5) + 3} textAnchor="end" fill="#94a3b8" fontSize="8">
+              <text x={padLeft - 6} y={toYDuty(0.5) + 3} textAnchor="end" fill={darkMode ? '#64748b' : '#94a3b8'} fontSize="8">
                 0.5
               </text>
-              <text x={padLeft - 6} y={padTop + 6} textAnchor="end" fill="#94a3b8" fontSize="8">
+              <text x={padLeft - 6} y={padTop + 6} textAnchor="end" fill={darkMode ? '#64748b' : '#94a3b8'} fontSize="8">
                 1.0
               </text>
-              <text x={padLeft - 6} y={padTop + plotHeight} textAnchor="end" fill="#94a3b8" fontSize="8">
+              <text x={padLeft - 6} y={padTop + plotHeight} textAnchor="end" fill={darkMode ? '#64748b' : '#94a3b8'} fontSize="8">
                 0.0
               </text>
 
@@ -294,7 +295,7 @@ export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateSta
             y1={padTop + plotHeight}
             x2={padLeft + plotWidth}
             y2={padTop + plotHeight}
-            stroke="#94a3b8"
+            stroke={darkMode ? '#475569' : '#94a3b8'}
             strokeWidth="1.2"
           />
           {[0, 60, 120, 180, 240, 300, 360].map((deg) => (
@@ -303,7 +304,7 @@ export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateSta
               x={toX(deg)}
               y={padTop + plotHeight + 24}
               textAnchor="middle"
-              fill="#64748b"
+              fill={darkMode ? '#94a3b8' : '#64748b'}
               fontSize="8.5"
             >
               {deg}°
@@ -313,26 +314,26 @@ export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateSta
       </div>
 
       {/* Legend & Explanation Bar */}
-      <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs">
+      <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
         {activeTab === 'saddle' && (
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="flex items-center gap-1 text-blue-700 font-semibold">
+            <span className="flex items-center gap-1 text-blue-700 dark:text-blue-400 font-semibold">
               <span className="w-3 h-1 bg-blue-600 rounded"></span>
               Va* (Saddle)
             </span>
-            <span className="flex items-center gap-1 text-emerald-700 font-semibold">
+            <span className="flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-semibold">
               <span className="w-3 h-1 bg-emerald-600 rounded"></span>
               Vb*
             </span>
-            <span className="flex items-center gap-1 text-amber-700 font-semibold">
+            <span className="flex items-center gap-1 text-amber-700 dark:text-amber-400 font-semibold">
               <span className="w-3 h-1 bg-amber-600 rounded"></span>
               Vc*
             </span>
-            <span className="flex items-center gap-1 text-purple-700 font-medium">
+            <span className="flex items-center gap-1 text-purple-700 dark:text-purple-400 font-medium">
               <span className="w-3 h-0.5 bg-purple-500 border-dashed rounded"></span>
               Zero-Sequence Vzso
             </span>
-            <span className="flex items-center gap-1 text-slate-400">
+            <span className="flex items-center gap-1 text-slate-400 dark:text-slate-500">
               <span className="w-3 h-0.5 bg-blue-300 border-dashed rounded"></span>
               Pure Sinusoid
             </span>
@@ -341,11 +342,11 @@ export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateSta
 
         {activeTab === 'pwm' && (
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="flex items-center gap-1 text-blue-700 font-semibold">
+            <span className="flex items-center gap-1 text-blue-700 dark:text-blue-400 font-semibold">
               <span className="w-3 h-1.5 bg-blue-600 rounded"></span>
               Van Filtered Fundamental
             </span>
-            <span className="flex items-center gap-1 text-sky-500">
+            <span className="flex items-center gap-1 text-sky-500 dark:text-sky-400">
               <span className="w-3 h-1 bg-sky-400 rounded"></span>
               Vab Instantaneous PWM Pulses
             </span>
@@ -354,23 +355,23 @@ export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateSta
 
         {activeTab === 'duties' && (
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="flex items-center gap-1 text-blue-700 font-semibold">
+            <span className="flex items-center gap-1 text-blue-700 dark:text-blue-400 font-semibold">
               <span className="w-3 h-1 bg-blue-600 rounded"></span>
-              Duty A (Da)
+              Da = ta / Ts
             </span>
-            <span className="flex items-center gap-1 text-emerald-700 font-semibold">
+            <span className="flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-semibold">
               <span className="w-3 h-1 bg-emerald-600 rounded"></span>
-              Duty B (Db)
+              Db = tb / Ts
             </span>
-            <span className="flex items-center gap-1 text-amber-700 font-semibold">
+            <span className="flex items-center gap-1 text-amber-700 dark:text-amber-400 font-semibold">
               <span className="w-3 h-1 bg-amber-600 rounded"></span>
-              Duty C (Dc)
+              Dc = tc / Ts
             </span>
           </div>
         )}
 
         {/* Note on cancellation */}
-        <span className="text-[11px] text-slate-400 italic">
+        <span className="text-[11px] text-slate-400 dark:text-slate-500 italic">
           Vab = Va* - Vb* = Va - Vb (Zero-sequence cancels out completely!)
         </span>
       </div>

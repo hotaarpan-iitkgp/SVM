@@ -20,6 +20,7 @@ import {
 interface MultilevelSvmViewProps {
   state: SvpwmState;
   onUpdateState: (partial: Partial<SvpwmState>) => void;
+  darkMode?: boolean;
 }
 
 interface LatticeVector {
@@ -31,7 +32,7 @@ interface LatticeVector {
   type: 'zero' | 'small' | 'medium' | 'large' | 'inner';
 }
 
-export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onUpdateState }) => {
+export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onUpdateState, darkMode }) => {
   // Configurable inverter levels: 2, 3, 4, 5, 6
   const [level, setLevel] = useState<number>(3);
   const [smallVectorChoice, setSmallVectorChoice] = useState<'p-type' | 'n-type' | 'balanced'>('balanced');
@@ -57,8 +58,8 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
   const vRefX = cx + vRefAlpha * R;
   const vRefY = cy - vRefBeta * R;
 
-  // Generate Generalized Multilevel Space Vector Lattice for N levels
-  const { vectors, nearest3, stats } = useMemo(() => {
+  // Generate Generalized Multilevel Space Vector Lattice for N levels (cached per level only)
+  const { vectors, stats } = useMemo(() => {
     const N = level;
     const map = new Map<string, { alpha: number; beta: number; states: string[] }>();
 
@@ -68,14 +69,12 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
       for (let sb = 0; sb < N; sb++) {
         for (let sc = 0; sc < N; sc++) {
           // Clarke transform normalized such that outer vector magnitude = 1.0:
-          // Maximum Sa - 0.5(Sb+Sc) = N-1, scaled by 1/(N-1)
           const valAlpha = (sa - 0.5 * (sb + sc)) / (N - 1);
           const valBeta = ((Math.sqrt(3) / 2) * (sb - sc)) / (N - 1);
 
           // Key for grouping redundant switching states
           const key = `${valAlpha.toFixed(4)},${valBeta.toFixed(4)}`;
 
-          // Format state label
           let stateLabel: string;
           if (N === 2) {
             stateLabel = `${sa}${sb}${sc}`;
@@ -123,24 +122,12 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
       });
     });
 
-    // Sub-triangles count: 6 * (N - 1)^2
     const numTriangles = 6 * (N - 1) * (N - 1);
     const numVectors = 3 * N * (N - 1) + 1;
     const numStates = N * N * N;
 
-    // Find the 3 nearest vectors to V_ref (Nearest Three Vectors - NTV)
-    // Sort all vectors by distance to (vRefAlpha, vRefBeta)
-    const sortedByDist = [...vectorList].sort((a, b) => {
-      const da = Math.hypot(a.alpha - vRefAlpha, a.beta - vRefBeta);
-      const db = Math.hypot(b.alpha - vRefAlpha, b.beta - vRefBeta);
-      return da - db;
-    });
-
-    const nearest3 = sortedByDist.slice(0, 3);
-
     return {
       vectors: vectorList,
-      nearest3,
       stats: {
         numStates,
         numVectors,
@@ -149,7 +136,18 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
         lineLevels: 2 * N - 1,
       },
     };
-  }, [level, vRefAlpha, vRefBeta]);
+  }, [level]);
+
+  // Find the 3 nearest vectors to V_ref on every rotation tick (Nearest Three Vectors - NTV)
+  const nearest3 = useMemo(() => {
+    return [...vectors]
+      .sort((a, b) => {
+        const da = Math.hypot(a.alpha - vRefAlpha, a.beta - vRefBeta);
+        const db = Math.hypot(b.alpha - vRefAlpha, b.beta - vRefBeta);
+        return da - db;
+      })
+      .slice(0, 3);
+  }, [vectors, vRefAlpha, vRefBeta]);
 
   // Major sector (1..6)
   const normDeg = ((thetaDeg % 360) + 360) % 360;
@@ -299,6 +297,20 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
               <span className="font-mono font-bold text-emerald-700 dark:text-emerald-400 w-9 text-right">{state.m.toFixed(2)}</span>
             </div>
 
+            <div className="flex items-center gap-1.5">
+              <span className="font-semibold text-slate-700 dark:text-slate-300">Speed:</span>
+              <input
+                type="range"
+                min="0.01"
+                max="0.10"
+                step="0.01"
+                value={state.speed}
+                onChange={(e) => onUpdateState({ speed: Number(e.target.value) })}
+                className="w-20 accent-emerald-600 h-1.5 bg-slate-200 dark:bg-slate-700 rounded cursor-pointer"
+              />
+              <span className="font-mono font-bold text-emerald-700 dark:text-emerald-400 w-10 text-right">{state.speed.toFixed(2)}x</span>
+            </div>
+
             <label className="flex items-center gap-1 cursor-pointer text-slate-600 dark:text-slate-300">
               <input
                 type="checkbox"
@@ -327,9 +339,32 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
               </p>
             </div>
 
-            <span className="text-xs px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 font-mono text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold">
-              Sector {majorSector} • θ={Math.round(thetaDeg)}°
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => onUpdateState({ isPlaying: !state.isPlaying })}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold text-white shadow-xs transition-colors ${
+                  state.isPlaying ? 'bg-amber-600 hover:bg-amber-700' : 'bg-emerald-600 hover:bg-emerald-700'
+                }`}
+                title={state.isPlaying ? 'Pause Rotation' : 'Start Auto-Rotation'}
+              >
+                {state.isPlaying ? (
+                  <>
+                    <Pause className="h-3 w-3 fill-current" />
+                    <span>Pause</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-3 w-3 fill-current" />
+                    <span>Rotate</span>
+                  </>
+                )}
+              </button>
+
+              <span className="text-xs px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 font-mono text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold flex items-center gap-1.5">
+                {state.isPlaying && <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>}
+                Sector {majorSector} • θ={Math.round(thetaDeg)}°
+              </span>
+            </div>
           </div>
 
           {/* SVG Canvas */}
@@ -347,8 +382,8 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
                   <polygon
                     key={`hex-ring-${idx}`}
                     points={pts}
-                    fill={idx === level - 2 ? '#f8fafc' : 'none'}
-                    stroke={idx === level - 2 ? '#cbd5e1' : '#e2e8f0'}
+                    fill={idx === level - 2 ? (darkMode ? '#0f172a' : '#f8fafc') : 'none'}
+                    stroke={idx === level - 2 ? (darkMode ? '#334155' : '#cbd5e1') : (darkMode ? '#1e293b' : '#e2e8f0')}
                     strokeWidth={idx === level - 2 ? '1.8' : '1'}
                     strokeDasharray={idx === level - 2 ? 'none' : '3 2'}
                   />
@@ -357,7 +392,7 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
 
               {/* Equilateral Sub-Triangle Mesh Grid Lines */}
               {showSubTriangles && (
-                <g stroke="#e2e8f0" strokeWidth="0.8" opacity="0.85">
+                <g stroke={darkMode ? '#334155' : '#e2e8f0'} strokeWidth="0.8" opacity="0.85">
                   {/* Radial sector boundary lines */}
                   {[0, 1, 2, 3, 4, 5].map((i) => {
                     const a = (i * Math.PI) / 3;
@@ -368,7 +403,7 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
                         y1={cy}
                         x2={cx + R * Math.cos(a)}
                         y2={cy - R * Math.sin(a)}
-                        stroke="#cbd5e1"
+                        stroke={darkMode ? '#475569' : '#cbd5e1'}
                         strokeWidth="1.2"
                       />
                     );
@@ -388,7 +423,7 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
                             y1={cy - v1.beta * R}
                             x2={cx + v2.alpha * R}
                             y2={cy - v2.beta * R}
-                            stroke="#e2e8f0"
+                            stroke={darkMode ? '#1e293b' : '#e2e8f0'}
                           />
                         );
                       }
@@ -402,7 +437,7 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
               {nearest3.length === 3 && (
                 <polygon
                   points={`${cx + nearest3[0].alpha * R},${cy - nearest3[0].beta * R} ${cx + nearest3[1].alpha * R},${cy - nearest3[1].beta * R} ${cx + nearest3[2].alpha * R},${cy - nearest3[2].beta * R}`}
-                  fill="#d1fae5"
+                  fill={darkMode ? 'rgba(16, 185, 129, 0.25)' : '#d1fae5'}
                   fillOpacity="0.65"
                   stroke="#10b981"
                   strokeWidth="1.8"
@@ -427,15 +462,15 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
                 y1={cy}
                 x2={vRefX}
                 y2={vRefY}
-                stroke="#047857"
+                stroke={darkMode ? '#34d399' : '#047857'}
                 strokeWidth="3.2"
                 strokeLinecap="round"
               />
-              <circle cx={vRefX} cy={vRefY} r="4.5" fill="#047857" />
+              <circle cx={vRefX} cy={vRefY} r="4.5" fill={darkMode ? '#34d399' : '#047857'} />
               <text
                 x={vRefX + 8}
                 y={vRefY - 6}
-                fill="#047857"
+                fill={darkMode ? '#34d399' : '#047857'}
                 fontSize="11"
                 fontWeight="bold"
               >
@@ -449,7 +484,7 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
 
                 const isNearest = nearest3.some((n) => n.id === vec.id);
 
-                let nodeFill = '#64748b';
+                let nodeFill = darkMode ? '#94a3b8' : '#64748b';
                 let nodeR = level > 4 ? 2.5 : 3.5;
                 if (vec.type === 'large') {
                   nodeFill = '#2563eb';
@@ -461,7 +496,7 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
                   nodeFill = '#059669';
                   nodeR = level > 4 ? 3 : 4;
                 } else if (vec.type === 'zero') {
-                  nodeFill = '#0f172a';
+                  nodeFill = darkMode ? '#f8fafc' : '#0f172a';
                   nodeR = level > 4 ? 4 : 5;
                 }
 
@@ -477,7 +512,7 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
                       cy={vy}
                       r={nodeR}
                       fill={nodeFill}
-                      stroke={isNearest ? '#ffffff' : 'none'}
+                      stroke={isNearest ? (darkMode ? '#0f172a' : '#ffffff') : 'none'}
                       strokeWidth={isNearest ? '1.5' : '0'}
                     />
                     {/* Node redundancy badge on small or medium levels */}
@@ -486,7 +521,7 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
                         x={vx}
                         y={vy - 6}
                         textAnchor="middle"
-                        fill="#059669"
+                        fill={darkMode ? '#34d399' : '#059669'}
                         fontSize="7.5"
                         fontWeight="bold"
                       >
@@ -498,12 +533,12 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
               })}
 
               {/* Center Origin Dot */}
-              <circle cx={cx} cy={cy} r="3" fill="#ffffff" />
+              <circle cx={cx} cy={cy} r="3" fill={darkMode ? '#f8fafc' : '#ffffff'} />
             </svg>
           </div>
 
           {/* Quick Sub-Triangle Legend */}
-          <div className="w-full flex items-center justify-between text-xs pt-3 border-t border-slate-100 text-slate-500">
+          <div className="w-full flex items-center justify-between text-xs pt-3 border-t border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
                 <span className="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block" /> Large (1.0)
@@ -515,10 +550,10 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 inline-block" /> Small (0.5)
               </span>
               <span className="flex items-center gap-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-slate-900 inline-block" /> Zero (0)
+                <span className="w-2.5 h-2.5 rounded-full bg-slate-900 dark:bg-slate-100 inline-block" /> Zero (0)
               </span>
             </div>
-            <span className="text-emerald-700 font-bold font-mono">
+            <span className="text-emerald-700 dark:text-emerald-400 font-bold font-mono">
               Active Triangle: {nearest3.map((n) => n.id).join(' - ')}
             </span>
           </div>

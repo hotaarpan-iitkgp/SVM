@@ -4,9 +4,10 @@ import { Zap, Activity, Info } from 'lucide-react';
 
 interface InverterCircuitViewProps {
   state: SvpwmState;
+  darkMode?: boolean;
 }
 
-export const InverterCircuitView: React.FC<InverterCircuitViewProps> = ({ state }) => {
+export const InverterCircuitView: React.FC<InverterCircuitViewProps> = ({ state, darkMode }) => {
   const [sa, sb, sc] = state.activeBits;
 
   // Voltages relative to DC negative rail (N)
@@ -62,14 +63,14 @@ export const InverterCircuitView: React.FC<InverterCircuitViewProps> = ({ state 
           </text>
 
           {/* Bottom Rail (0V / DC-) */}
-          <line x1="40" y1="185" x2="350" y2="185" stroke="#334155" strokeWidth="2.5" />
-          <text x="32" y="189" textAnchor="end" fill="#334155" fontSize="10" fontWeight="bold">
+          <line x1="40" y1="185" x2="350" y2="185" stroke={darkMode ? '#475569' : '#334155'} strokeWidth="2.5" />
+          <text x="32" y="189" textAnchor="end" fill={darkMode ? '#94a3b8' : '#334155'} fontSize="10" fontWeight="bold">
             0V (N)
           </text>
 
           {/* DC Link Capacitor */}
-          <line x1="60" y1="25" x2="60" y2="95" stroke="#64748b" strokeWidth="1.5" />
-          <line x1="60" y1="115" x2="60" y2="185" stroke="#64748b" strokeWidth="1.5" />
+          <line x1="60" y1="25" x2="60" y2="95" stroke={darkMode ? '#475569' : '#64748b'} strokeWidth="1.5" />
+          <line x1="60" y1="115" x2="60" y2="185" stroke={darkMode ? '#475569' : '#64748b'} strokeWidth="1.5" />
           <line x1="45" y1="95" x2="75" y2="95" stroke="#0284c7" strokeWidth="2.5" />
           <line x1="45" y1="115" x2="75" y2="115" stroke="#0284c7" strokeWidth="2.5" />
           <text x="78" y="109" fill="#0284c7" fontSize="9" fontWeight="bold">
@@ -98,7 +99,7 @@ export const InverterCircuitView: React.FC<InverterCircuitViewProps> = ({ state 
                   y1={yTop}
                   x2={sw.x}
                   y2={yBot}
-                  stroke={sw.isOn ? '#10b981' : '#cbd5e1'}
+                  stroke={sw.isOn ? '#10b981' : darkMode ? '#334155' : '#cbd5e1'}
                   strokeWidth={sw.isOn ? '2.5' : '1.5'}
                 />
 
@@ -109,8 +110,8 @@ export const InverterCircuitView: React.FC<InverterCircuitViewProps> = ({ state 
                   width="32"
                   height="28"
                   rx="4"
-                  fill={sw.isOn ? '#ecfdf5' : '#f8fafc'}
-                  stroke={sw.isOn ? '#10b981' : '#94a3b8'}
+                  fill={sw.isOn ? (darkMode ? '#064e3b' : '#ecfdf5') : (darkMode ? '#1e293b' : '#f8fafc')}
+                  stroke={sw.isOn ? '#10b981' : darkMode ? '#475569' : '#94a3b8'}
                   strokeWidth={sw.isOn ? '2' : '1'}
                 />
 
@@ -119,7 +120,7 @@ export const InverterCircuitView: React.FC<InverterCircuitViewProps> = ({ state 
                   x={sw.x}
                   y={yCenter - 1}
                   textAnchor="middle"
-                  fill={sw.isOn ? '#047857' : '#64748b'}
+                  fill={sw.isOn ? (darkMode ? '#6ee7b7' : '#047857') : (darkMode ? '#94a3b8' : '#64748b')}
                   fontSize="9.5"
                   fontWeight="bold"
                 >
@@ -131,7 +132,7 @@ export const InverterCircuitView: React.FC<InverterCircuitViewProps> = ({ state 
                   x={sw.x}
                   y={yCenter + 9}
                   textAnchor="middle"
-                  fill={sw.isOn ? '#059669' : '#94a3b8'}
+                  fill={sw.isOn ? '#10b981' : (darkMode ? '#64748b' : '#94a3b8')}
                   fontSize="7.5"
                   fontWeight="bold"
                 >
@@ -172,14 +173,14 @@ export const InverterCircuitView: React.FC<InverterCircuitViewProps> = ({ state 
             width="52"
             height="55"
             rx="6"
-            fill="#f1f5f9"
-            stroke="#64748b"
+            fill={darkMode ? '#1e293b' : '#f1f5f9'}
+            stroke={darkMode ? '#475569' : '#64748b'}
             strokeWidth="1.5"
           />
-          <text x="426" y="112" textAnchor="middle" fill="#1e293b" fontSize="9" fontWeight="bold">
+          <text x="426" y="112" textAnchor="middle" fill={darkMode ? '#f8fafc' : '#1e293b'} fontSize="9" fontWeight="bold">
             3-Phase
           </text>
-          <text x="426" y="124" textAnchor="middle" fill="#64748b" fontSize="8" fontWeight="bold">
+          <text x="426" y="124" textAnchor="middle" fill={darkMode ? '#94a3b8' : '#64748b'} fontSize="8" fontWeight="bold">
             AC Motor
           </text>
           <text x="426" y="136" textAnchor="middle" fill="#3b82f6" fontSize="8" fontWeight="bold">
