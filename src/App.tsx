@@ -211,7 +211,7 @@ export default function App() {
       />
 
       {/* Main App Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+      <main className="flex-1 max-w-[1500px] w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
         {/* Tab 1: Interactive Laboratory */}
         {activeTab === 'visualizer' && (
           <div className="space-y-6">
@@ -314,28 +314,28 @@ export default function App() {
             </div>
 
             {/* Core Dual-Column Laboratory Display */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-stretch">
               {/* Left Column: Complex Hexagon */}
-              <div className="flex flex-col h-full min-h-[440px]">
+              <div className="flex flex-col h-full min-h-[500px]">
                 <HexagonView state={state} onUpdateState={handleUpdateState} darkMode={darkMode} />
               </div>
 
               {/* Right Column: Symmetrical 7-Segment PWM Sub-Cycle Timing */}
-              <div className="flex flex-col h-full min-h-[440px]">
+              <div className="flex flex-col h-full min-h-[500px]">
                 <PwmSequenceView state={state} onUpdateState={handleUpdateState} darkMode={darkMode} />
               </div>
             </div>
 
             {/* Second Row: Inverter Circuit Live Conduction & Harmonic Spectrum */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-stretch">
               {/* Left: 3-Phase Inverter Live Conduction Schematic */}
-              <div className="flex flex-col h-full">
+              <div className="flex flex-col h-full min-h-[460px]">
                 <InverterCircuitView state={state} darkMode={darkMode} />
               </div>
 
               {/* Right: Harmonic Spectrum (FFT) & DC Bus Utilization */}
-              <div className="flex flex-col h-full">
-                <HarmonicsView state={state} />
+              <div className="flex flex-col h-full min-h-[460px]">
+                <HarmonicsView state={state} darkMode={darkMode} />
               </div>
             </div>
 
@@ -356,7 +356,7 @@ export default function App() {
         {/* Tab 3: Dwell Times Bar & Volt-Second Balance */}
         {activeTab === 'dwell' && (
           <div className="py-2">
-            <DwellTimesView state={state} onUpdateState={handleUpdateState} />
+            <DwellTimesView state={state} onUpdateState={handleUpdateState} darkMode={darkMode} />
           </div>
         )}
 

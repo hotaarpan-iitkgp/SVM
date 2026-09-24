@@ -12,6 +12,8 @@ import {
   Layers,
   Sparkles
 } from 'lucide-react';
+import { useCardFullscreen } from '../hooks/useCardFullscreen';
+import { FullscreenButton } from './FullscreenButton';
 
 interface HexagonViewProps {
   state: SvpwmState;
@@ -134,19 +136,28 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState, 
     });
   };
 
+  const { isFullscreen, toggleFullscreen, cardRef } = useCardFullscreen();
+
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-4 flex flex-col h-full transition-colors">
+    <div
+      ref={cardRef}
+      className={`${
+        isFullscreen
+          ? 'fixed inset-0 z-50 bg-white dark:bg-slate-950 p-6 sm:p-8 flex flex-col overflow-auto shadow-2xl'
+          : 'bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-5 flex flex-col h-full'
+      } transition-colors`}
+    >
       {/* Header bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-sm font-bold text-slate-800 dark:text-white tracking-tight">
+            <h2 className="text-base font-bold text-slate-800 dark:text-white tracking-tight">
               Complex αβ Space Vector Hexagon
             </h2>
-            <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
               Sector {state.sector}
             </span>
-            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold border ${
+            <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
               state.m <= 1.0 
                 ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' 
                 : state.m <= 1.155 
@@ -161,11 +172,11 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState, 
           </p>
         </div>
 
-        {/* View toggles */}
+        {/* View toggles & Fullscreen */}
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowProjections(!showProjections)}
-            className={`px-2 py-1 rounded text-xs font-medium border transition-colors ${
+            className={`px-2.5 py-1 rounded text-xs font-medium border transition-colors ${
               showProjections 
                 ? 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800' 
                 : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
@@ -175,7 +186,7 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState, 
           </button>
           <button
             onClick={() => setShowTrajectory(!showTrajectory)}
-            className={`px-2 py-1 rounded text-xs font-medium border transition-colors ${
+            className={`px-2.5 py-1 rounded text-xs font-medium border transition-colors ${
               showTrajectory 
                 ? 'bg-sky-50 dark:bg-sky-950/70 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-800' 
                 : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
@@ -183,15 +194,16 @@ export const HexagonView: React.FC<HexagonViewProps> = ({ state, onUpdateState, 
           >
             Trajectory
           </button>
+          <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
         </div>
       </div>
 
       {/* Main SVG Visualization */}
-      <div className="relative flex-1 flex items-center justify-center my-2 min-h-[340px]">
+      <div className={`relative flex-1 flex items-center justify-center my-3 ${isFullscreen ? 'min-h-[500px]' : 'min-h-[420px]'}`}>
         <svg
           ref={svgRef}
           viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
-          className="w-full max-w-[420px] aspect-square select-none cursor-crosshair touch-none"
+          className={`w-full ${isFullscreen ? 'max-w-[700px]' : 'max-w-[500px]'} aspect-square select-none cursor-crosshair touch-none drop-shadow-sm`}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}

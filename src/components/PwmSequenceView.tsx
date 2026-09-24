@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { SvpwmState } from '../types';
 import { getSvpwm7Segments } from '../utils/svpwm';
 import { Clock, Sliders, Info, CheckCircle2 } from 'lucide-react';
+import { useCardFullscreen } from '../hooks/useCardFullscreen';
+import { FullscreenButton } from './FullscreenButton';
 
 interface PwmSequenceViewProps {
   state: SvpwmState;
@@ -106,17 +108,26 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
 
   const cursorX = padLeft + tau * plotWidth;
 
+  const { isFullscreen, toggleFullscreen, cardRef } = useCardFullscreen();
+
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-4 flex flex-col justify-between h-full min-h-[560px] transition-colors">
+    <div
+      ref={cardRef}
+      className={`${
+        isFullscreen
+          ? 'fixed inset-0 z-50 bg-white dark:bg-slate-950 p-6 sm:p-8 flex flex-col overflow-auto shadow-2xl'
+          : 'bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-5 flex flex-col justify-between h-full min-h-[580px]'
+      } transition-colors`}
+    >
       {/* Header bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-800 shrink-0">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-sm font-bold text-slate-800 dark:text-white tracking-tight flex items-center gap-1.5">
+            <h2 className="text-base font-bold text-slate-800 dark:text-white tracking-tight flex items-center gap-1.5">
               <Clock className="h-4 w-4 text-sky-600 dark:text-sky-400" />
               Symmetrical 7-Segment PWM Sub-Cycle Timing
             </h2>
-            <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
               Ts = {(state.ts * 1e6).toFixed(0)} µs ({state.fsw / 1000} kHz)
             </span>
           </div>
@@ -125,13 +136,13 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
           </p>
         </div>
 
-        {/* Carrier style switch & Vector status */}
+        {/* Carrier style switch & Vector status & Fullscreen */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs">
             <button
               onClick={() => setCarrierMode('v-shape')}
               title="Standard V-shape carrier where duty compare line intersects exactly at switching transitions"
-              className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+              className={`px-2.5 py-0.5 rounded text-[11px] font-medium transition-colors ${
                 carrierMode === 'v-shape'
                   ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-semibold'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -142,7 +153,7 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
             <button
               onClick={() => setCarrierMode('peak-shape')}
               title="Peak-shape triangular carrier (0→1→0)"
-              className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+              className={`px-2.5 py-0.5 rounded text-[11px] font-medium transition-colors ${
                 carrierMode === 'peak-shape'
                   ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-semibold'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -158,14 +169,16 @@ export const PwmSequenceView: React.FC<PwmSequenceViewProps> = ({ state, onUpdat
             <span className="font-bold text-amber-400">{currentSeg.name}</span>
             <span className="text-slate-300">[{currentSeg.bits.join(' ')}]</span>
           </div>
+
+          <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
         </div>
       </div>
 
       {/* SVG Timing Diagram - fills complete Y-axis */}
-      <div className="relative flex-1 w-full my-2 flex items-center justify-center min-h-[350px]">
+      <div className={`relative flex-1 w-full my-2 flex items-center justify-center ${isFullscreen ? 'min-h-[500px]' : 'min-h-[400px]'}`}>
         <svg
           viewBox={`0 0 ${width} ${height}`}
-          className="w-full h-full select-none font-sans"
+          className={`w-full ${isFullscreen ? 'max-w-[1100px]' : 'max-w-[760px]'} h-auto select-none font-sans drop-shadow-sm`}
           preserveAspectRatio="xMidYMid meet"
         >
           {/* Segment Background Shading & Boundary Lines */}

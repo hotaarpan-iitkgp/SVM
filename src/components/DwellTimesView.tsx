@@ -13,14 +13,18 @@ import {
   AlertTriangle,
   Info
 } from 'lucide-react';
+import { useCardFullscreen } from '../hooks/useCardFullscreen';
+import { FullscreenButton } from './FullscreenButton';
 
 interface DwellTimesViewProps {
   state: SvpwmState;
   onUpdateState: (partial: Partial<SvpwmState>) => void;
+  darkMode?: boolean;
 }
 
-export const DwellTimesView: React.FC<DwellTimesViewProps> = ({ state, onUpdateState }) => {
+export const DwellTimesView: React.FC<DwellTimesViewProps> = ({ state, onUpdateState, darkMode }) => {
   const { theta, thetaDeg, m, vdc, fsw, ts, t1, t2, t0, sector } = state;
+  const { isFullscreen, toggleFullscreen, cardRef } = useCardFullscreen();
 
   // Segments for current sector
   const segments = useMemo(() => {
@@ -292,21 +296,29 @@ export const DwellTimesView: React.FC<DwellTimesViewProps> = ({ state, onUpdateS
       {/* Two Columns: 360° Trend Graph & Volt-Second Balance Derivation */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Continuous 360° Dwell Times Graph */}
-        <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-5 flex flex-col transition-colors">
+        <div
+          ref={cardRef}
+          className={`${
+            isFullscreen
+              ? 'fixed inset-0 z-50 bg-white dark:bg-slate-950 p-6 sm:p-8 flex flex-col overflow-auto shadow-2xl'
+              : 'bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-5 flex flex-col'
+          } transition-colors`}
+        >
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">
                 Continuous 360° Dwell Times Trend: T1(θ), T2(θ), T0(θ)
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Observe the trigonometric sinusoidal handover between T1 and T2 every 60°
               </p>
             </div>
+            <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
           </div>
 
           {/* SVG Multi-curve plot */}
-          <div className="relative flex-1 w-full my-3 min-h-[220px]">
-            <svg viewBox="0 0 500 200" className="w-full h-full font-sans select-none">
+          <div className={`relative flex-1 w-full my-3 ${isFullscreen ? 'min-h-[480px]' : 'min-h-[260px]'}`}>
+            <svg viewBox="0 0 500 200" className="w-full h-full font-sans select-none drop-shadow-sm">
               {/* Sector background alternating bands */}
               {[0, 1, 2, 3, 4, 5].map((s) => (
                 <g key={`band-${s}`}>

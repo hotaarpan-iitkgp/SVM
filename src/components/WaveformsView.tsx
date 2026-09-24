@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { SvpwmState } from '../types';
 import { generateCycleWaveforms } from '../utils/svpwm';
 import { Layers, Activity, Sliders, Eye } from 'lucide-react';
+import { useCardFullscreen } from '../hooks/useCardFullscreen';
+import { FullscreenButton } from './FullscreenButton';
 
 interface WaveformsViewProps {
   state: SvpwmState;
@@ -12,19 +14,20 @@ interface WaveformsViewProps {
 export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateState, darkMode }) => {
   const [activeTab, setActiveTab] = useState<'saddle' | 'pwm' | 'duties'>('saddle');
   const [showZso, setShowZso] = useState(true);
+  const { isFullscreen, toggleFullscreen, cardRef } = useCardFullscreen();
 
   // Generate waveform points over 360 degrees
   const waveforms = useMemo(() => {
     return generateCycleWaveforms(state.m, state.vdc, state.fsw, 360);
   }, [state.m, state.vdc, state.fsw]);
 
-  // SVG dimensions
-  const width = 640;
-  const height = 230;
-  const padLeft = 45;
-  const padRight = 20;
-  const padTop = 20;
-  const padBottom = 30;
+  // SVG dimensions - larger and crisper
+  const width = 760;
+  const height = isFullscreen ? 360 : 270;
+  const padLeft = 50;
+  const padRight = 24;
+  const padTop = 24;
+  const padBottom = 34;
   const plotWidth = width - padLeft - padRight;
   const plotHeight = height - padTop - padBottom;
   const midY = padTop + plotHeight / 2;
@@ -55,59 +58,70 @@ export const WaveformsView: React.FC<WaveformsViewProps> = ({ state, onUpdateSta
   const sectorAngles = [60, 120, 180, 240, 300];
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-4 flex flex-col h-full transition-colors">
+    <div
+      ref={cardRef}
+      className={`${
+        isFullscreen
+          ? 'fixed inset-0 z-50 bg-white dark:bg-slate-950 p-6 sm:p-8 flex flex-col overflow-auto shadow-2xl'
+          : 'bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-5 flex flex-col h-full'
+      } transition-colors`}
+    >
       {/* Title & View Switcher */}
       <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
         <div>
-          <h2 className="text-sm font-bold text-slate-800 dark:text-white tracking-tight flex items-center gap-1.5">
+          <h2 className="text-base font-bold text-slate-800 dark:text-white tracking-tight flex items-center gap-1.5">
             <Activity className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
             Full-Cycle Waveforms (0° to 360°)
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             {activeTab === 'saddle' && 'Saddle waveform: Fundamental + Zero-Sequence Common-Mode Offset'}
             {activeTab === 'pwm' && 'Instantaneous inverter PWM pulsed voltages & low-pass filtered fundamental'}
             {activeTab === 'duties' && 'Leg duty cycles Da(θ), Db(θ), Dc(θ) across the 6 Hexagon Sectors'}
           </p>
         </div>
 
-        {/* Tab Switcher */}
-        <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs">
-          <button
-            onClick={() => setActiveTab('saddle')}
-            className={`px-2.5 py-1 rounded-md font-medium transition-colors ${
-              activeTab === 'saddle'
-                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-semibold'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            Saddle Reference
-          </button>
-          <button
-            onClick={() => setActiveTab('pwm')}
-            className={`px-2.5 py-1 rounded-md font-medium transition-colors ${
-              activeTab === 'pwm'
-                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-semibold'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            PWM & Filtered AC
-          </button>
-          <button
-            onClick={() => setActiveTab('duties')}
-            className={`px-2.5 py-1 rounded-md font-medium transition-colors ${
-              activeTab === 'duties'
-                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-semibold'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            Duty Cycles
-          </button>
+        {/* Tab Switcher & Fullscreen */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs">
+            <button
+              onClick={() => setActiveTab('saddle')}
+              className={`px-2.5 py-1 rounded-md font-medium transition-colors ${
+                activeTab === 'saddle'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-semibold'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              Saddle Reference
+            </button>
+            <button
+              onClick={() => setActiveTab('pwm')}
+              className={`px-2.5 py-1 rounded-md font-medium transition-colors ${
+                activeTab === 'pwm'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-semibold'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              PWM & Filtered AC
+            </button>
+            <button
+              onClick={() => setActiveTab('duties')}
+              className={`px-2.5 py-1 rounded-md font-medium transition-colors ${
+                activeTab === 'duties'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-semibold'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              Duty Cycles
+            </button>
+          </div>
+
+          <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
         </div>
       </div>
 
       {/* SVG Plot */}
-      <div className="relative flex-1 w-full my-2 min-h-[220px] flex items-center justify-center">
-        <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto select-none font-sans">
+      <div className={`relative flex-1 w-full my-3 ${isFullscreen ? 'min-h-[460px]' : 'min-h-[290px]'} flex items-center justify-center`}>
+        <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto select-none font-sans drop-shadow-sm">
           {/* Grid lines & zero axis */}
           <line
             x1={padLeft}

@@ -1,6 +1,8 @@
 import React from 'react';
 import { SvpwmState } from '../types';
 import { Zap, Activity, Info } from 'lucide-react';
+import { useCardFullscreen } from '../hooks/useCardFullscreen';
+import { FullscreenButton } from './FullscreenButton';
 
 interface InverterCircuitViewProps {
   state: SvpwmState;
@@ -29,8 +31,17 @@ export const InverterCircuitView: React.FC<InverterCircuitViewProps> = ({ state,
   const vbn = Math.round(vbN - vnN);
   const vcn = Math.round(vcN - vnN);
 
+  const { isFullscreen, toggleFullscreen, cardRef } = useCardFullscreen();
+
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-4 flex flex-col h-full transition-colors">
+    <div
+      ref={cardRef}
+      className={`${
+        isFullscreen
+          ? 'fixed inset-0 z-50 bg-white dark:bg-slate-950 p-6 sm:p-8 flex flex-col overflow-auto shadow-2xl'
+          : 'bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-5 flex flex-col h-full'
+      } transition-colors`}
+    >
       {/* Title & Badge */}
       <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-2">
@@ -38,7 +49,7 @@ export const InverterCircuitView: React.FC<InverterCircuitViewProps> = ({ state,
             <Zap className="h-4 w-4" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-slate-800 dark:text-white tracking-tight">
+            <h2 className="text-base font-bold text-slate-800 dark:text-white tracking-tight">
               3-Phase Inverter Live Conduction
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -47,15 +58,18 @@ export const InverterCircuitView: React.FC<InverterCircuitViewProps> = ({ state,
           </div>
         </div>
 
-        <div className="text-right">
-          <span className="text-xs text-slate-400 dark:text-slate-500 block">DC Bus</span>
-          <span className="text-xs font-bold font-mono text-slate-800 dark:text-slate-200">{vdc} V</span>
+        <div className="flex items-center gap-3">
+          <div className="text-right">
+            <span className="text-xs text-slate-400 dark:text-slate-500 block">DC Bus</span>
+            <span className="text-xs font-bold font-mono text-slate-800 dark:text-slate-200">{vdc} V</span>
+          </div>
+          <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
         </div>
       </div>
 
       {/* Schematic SVG */}
-      <div className="relative flex-1 flex items-center justify-center my-2 min-h-[220px]">
-        <svg viewBox="0 0 460 210" className="w-full h-auto select-none font-sans">
+      <div className={`relative flex-1 flex items-center justify-center my-3 ${isFullscreen ? 'min-h-[500px]' : 'min-h-[290px]'}`}>
+        <svg viewBox="0 0 460 210" className={`w-full ${isFullscreen ? 'max-w-[900px]' : 'max-w-[620px]'} h-auto select-none font-sans drop-shadow-sm`}>
           {/* Top Rail (+Vdc) */}
           <line x1="40" y1="25" x2="350" y2="25" stroke="#ef4444" strokeWidth="2.5" />
           <text x="32" y="29" textAnchor="end" fill="#ef4444" fontSize="10" fontWeight="bold">

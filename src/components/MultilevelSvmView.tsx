@@ -16,6 +16,8 @@ import {
   Pause,
   ChevronLeft
 } from 'lucide-react';
+import { useCardFullscreen } from '../hooks/useCardFullscreen';
+import { FullscreenButton } from './FullscreenButton';
 
 interface MultilevelSvmViewProps {
   state: SvpwmState;
@@ -38,6 +40,7 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
   const [smallVectorChoice, setSmallVectorChoice] = useState<'p-type' | 'n-type' | 'balanced'>('balanced');
   const [showSubTriangles, setShowSubTriangles] = useState(true);
   const [showStateLabels, setShowStateLabels] = useState(false);
+  const { isFullscreen, toggleFullscreen, cardRef } = useCardFullscreen();
 
   // SVG Geometry Constants
   const R = 155; // outer radius scale in pixels
@@ -327,10 +330,17 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
       {/* Main Grid: Interactive Multi-Level Canvas & Synthesis Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Interactive Multi-Level Hexagon Canvas */}
-        <div className="lg:col-span-7 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-5 flex flex-col items-center transition-colors">
+        <div
+          ref={cardRef}
+          className={`${
+            isFullscreen
+              ? 'fixed inset-0 z-50 bg-white dark:bg-slate-950 p-6 sm:p-8 flex flex-col overflow-auto shadow-2xl'
+              : 'lg:col-span-7 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs p-5 flex flex-col items-center'
+          } transition-colors`}
+        >
           <div className="w-full flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
-              <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <Compass className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                 {level}-Level Space Vector Hexagonal Lattice ({stats.numTriangles} Sub-Triangles)
               </h2>
@@ -342,7 +352,7 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
             <div className="flex items-center gap-2">
               <button
                 onClick={() => onUpdateState({ isPlaying: !state.isPlaying })}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold text-white shadow-xs transition-colors ${
+                className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold text-white shadow-xs transition-colors cursor-pointer ${
                   state.isPlaying ? 'bg-amber-600 hover:bg-amber-700' : 'bg-emerald-600 hover:bg-emerald-700'
                 }`}
                 title={state.isPlaying ? 'Pause Rotation' : 'Start Auto-Rotation'}
@@ -364,12 +374,14 @@ export const MultilevelSvmView: React.FC<MultilevelSvmViewProps> = ({ state, onU
                 {state.isPlaying && <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>}
                 Sector {majorSector} • θ={Math.round(thetaDeg)}°
               </span>
+
+              <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
             </div>
           </div>
 
           {/* SVG Canvas */}
-          <div className="relative flex-1 w-full my-2 min-h-[410px] flex items-center justify-center">
-            <svg viewBox="0 0 440 410" className="w-full max-w-[440px] h-auto select-none font-sans">
+          <div className={`relative flex-1 w-full my-3 ${isFullscreen ? 'min-h-[520px]' : 'min-h-[440px]'} flex items-center justify-center`}>
+            <svg viewBox="0 0 440 410" className={`w-full ${isFullscreen ? 'max-w-[760px]' : 'max-w-[500px]'} h-auto select-none font-sans drop-shadow-sm`}>
               {/* Outer and Concentric Hexagons */}
               {Array.from({ length: level - 1 }, (_, idx) => {
                 const k = (idx + 1) / (level - 1); // 1/(N-1) .. 1.0
